@@ -47,14 +47,13 @@
 
             <div class="jumbotron">
                 <div class="container">
-                    <h1 class="em-text">CodeVomit</h1>
+                    <h1 class="em-text" th:text="#{post-frame.jumbotron.title}">CodeVomit_</h1>
                     <p class="em-text">
-                        <em>CodeVomit is code churned out thousands of lines at a time,
-                            sometimes using CopyAndPasteProgramming, but usually by just
-                            brain dumping onto the keyboard.
+                        <em th:text="#{post-frame.jumbotron.subtitle}">
                         </em>
 
-                        [<a class="em-text" href="http://c2.com/cgi/wiki?CodeVomit"> http://c2.com/cgi/wiki?CodeVomit </a>]
+                        [<a class="em-text" href="http://c2.com/cgi/wiki?CodeVomit"
+                            th:text="#{post-frame.jumbotron.link}"> http://c2.com/cgi/wiki?CodeVomit </a>]
 
                     </p>
                 </div>
