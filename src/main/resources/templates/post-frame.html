@@ -1,10 +1,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <meta charset="utf-8" />
+        <meta content="text/xhtml; charset=utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        <title>CodeVomit</title>
+        <title th:text="#{post-frame.jumbotron.title}"></title>
         
         <link rel="apple-touch-icon" href="apple-touch-icon.png" />
 
@@ -58,8 +58,32 @@
                     </p>
                 </div>
             </div>
-            
-            
+
+            <div class="row">
+                <div id="postContainer" class="col-md-9">
+                </div>
+
+                <div id="sidebar" class="col-md-3">
+                    <div class="sidebar-module sidebar-module-inset">
+                        <h4>About</h4>
+                    </div>
+                    <div id="indexContainer" class="sidebar-module">
+                        <h4>Archives</h4>
+                        <ol id="postsIndex" class="list-unstyled">
+                            <li >
+                                
+                            </li>
+                        </ol>
+                    </div>
+                    <div class="sidebar-module">
+                        <h4>Elsewhere</h4>
+                        <ol class="list-unstyled">
+                            <li><a target="_blank" href="https://github.com/Rospaccio/">GitHub</a></li>
+                            <li><a target="_blank" href="https://codevomit.wordpress.com/">Wordpress</a></li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
             
             <div class="container">
                 <footer>
