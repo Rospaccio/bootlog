@@ -10,7 +10,12 @@
 
 	<name>bootlog</name>
 	<description>Blog platform built upon Spring Boot and Thymeleaf</description>
-
+        
+        <organization>
+            <name>CodeVomit Productions</name>
+            <url>www.codevomit.xyz</url>
+        </organization>
+        
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
