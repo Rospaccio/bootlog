@@ -1,4 +1,4 @@
-package xyz.codevomit;
+package xyz.codevomit.bootlog;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
