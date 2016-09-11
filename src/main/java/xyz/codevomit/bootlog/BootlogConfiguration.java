@@ -16,8 +16,11 @@
  */
 package xyz.codevomit.bootlog;
 
+import org.apache.catalina.connector.Connector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
+import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -61,4 +64,25 @@ public class BootlogConfiguration extends WebMvcConfigurerAdapter
      {
          return new PostLocator(postsDirectoryPath);
      }
+     
+     @Bean
+    public EmbeddedServletContainerFactory servletContainer() 
+    {
+       Integer ajpPortInt = 9009;
+       Boolean ajpEnabledBool = true;    
+
+        TomcatEmbeddedServletContainerFactory tomcat = new TomcatEmbeddedServletContainerFactory();
+        if (ajpEnabledBool)
+        {
+            Connector ajpConnector = new Connector("AJP/1.3");
+            ajpConnector.setProtocol("AJP/1.3");
+            ajpConnector.setPort(ajpPortInt);
+            ajpConnector.setSecure(false);
+            ajpConnector.setAllowTrace(false);
+            ajpConnector.setScheme("http");
+            tomcat.addAdditionalTomcatConnectors(ajpConnector);
+        }
+
+        return tomcat;
+    }
 }
