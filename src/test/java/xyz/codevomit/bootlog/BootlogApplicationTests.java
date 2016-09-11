@@ -12,5 +12,4 @@ public class BootlogApplicationTests {
 	@Test
 	public void contextLoads() {
 	}
-
 }

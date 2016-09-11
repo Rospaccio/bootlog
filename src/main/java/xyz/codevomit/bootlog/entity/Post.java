@@ -22,8 +22,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  *
@@ -32,20 +34,23 @@ import lombok.Data;
 @Entity
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Post
 {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
     
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     String sourceUrl;
+    
+    @Column(unique = true, nullable = false)
+    String filename;
     
     String title;
     
     LocalDateTime publishedOn;
     
     LocalDateTime editedOn;
-    
-    String sourceText;
 }

@@ -25,5 +25,5 @@ import xyz.codevomit.bootlog.entity.Post;
  */
 public interface PostRepository extends JpaRepository<Post, Long>
 {
-    
+    public Post findBySourceUrl(String sourceUrl);
 }

@@ -14,14 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package xyz.codevomit.bootlog.entity;
+package xyz.codevomit.bootlog;
 
-import java.time.LocalDateTime;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import xyz.codevomit.bootlog.repository.PostRepository;
 
@@ -31,39 +32,30 @@ import xyz.codevomit.bootlog.repository.PostRepository;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @DataJpaTest
-public class PostTest
-{
+@Slf4j
+public class BootlogBootstrapperTest
+{    
     @Autowired
-    PostRepository postRepository;
+    PostRepository postRepo;
     
-    public PostTest()
+    public BootlogBootstrapperTest()
     {
     }
 
+    /**
+     * Test of bootstrapDatabase method, of class BootlogBootstrapper.
+     */
     @Test
-    public void testInit()
+    public void testBootstrapDatabase()
     {
-        assertNotNull(postRepository);
+        assertEquals(0, postRepo.count());
+        assertNotNull(postRepo);
+        BootlogBootstrapper bootstrapper = new BootlogBootstrapper(postRepo, "posts");
+        
+         bootstrapper.bootstrapDatabase();
+         
+         assertNotEquals(0, postRepo.count());
+         postRepo.findAll().stream().forEach((p) -> log.info("found post with url = " + p.getSourceUrl()));
     }
     
-    @Test
-    public void testCRUD()
-    {
-        Post post = Post.builder()
-                .title("Rospo")
-                .sourceUrl("www.sticazzi.com")
-                .editedOn(LocalDateTime.now())
-                .publishedOn(LocalDateTime.now())
-                .build();
-        
-        Post saved = postRepository.save(post);
-        assertNotNull(saved.getId());
-        
-        Post retrieved = postRepository.findOne(saved.getId());
-        assertEquals(saved.getId(), retrieved.getId());
-        
-        postRepository.delete(saved);
-        retrieved = postRepository.findOne(saved.getId());
-        assertNull(retrieved);
-    }
 }
