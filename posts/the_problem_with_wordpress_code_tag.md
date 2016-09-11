@@ -8,15 +8,15 @@ But there has always been a problem with such code fragments, I would say a bug,
 
 I usually wrap my code fragment with a `[code]` tag in the HTML editor, like this:
 
-![HTML editor with a code tag](../posts/images/image-01.png)
+![HTML editor with a code tag](/images/image-01.png)
 
 Then, when I first publish the complete article, I get something like this, which looks good:
 
-![The resulting article with the code fragment](http://codevomit.xyz/posts/images/image-02.png)
+![The resulting article with the code fragment](/images/image-02.png)
 
 It's very common that I edit the article various times. Since I'm not native in English, very often I realize that I made a grammar mistake, or misspelled a word, after hours or days since the initial publication. When in this situation, I open an existing post for edit, I correct nothing more than the offending sentence or word, and then update the article. And this is what I get:
 
-![broken post](http://codevomit.xyz/posts/images/image-03.png)
+![broken post](/images/image-03.png)
 
 WordPress somehow auto-escapes any character reserved to HTML. Now I have to individually fix any unwanted HTML entity occurrences, or to hunt down the original piece of code and cut-n-paste it from scratch. Multiply this for the number of time I misspell a word (thousands), and you can easily get why I'm so mad at WordPress.
 

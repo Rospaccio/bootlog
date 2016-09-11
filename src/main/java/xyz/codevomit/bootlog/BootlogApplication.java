@@ -19,6 +19,6 @@ public class BootlogApplication extends WebMvcConfigurerAdapter
     {
         super.addResourceHandlers(registry);
         registry.addResourceHandler("/images/**")
-                .addResourceLocations("file:D:\\workspace-mars-new\\bootlog\\posts\\images/");
+                .addResourceLocations("file:D:/workspace-mars-new/bootlog/posts/images/");
     }
 }
