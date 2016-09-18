@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package xyz.codevomit.bootlog.repository;
+package xyz.codevomit.bootlog.data;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import xyz.codevomit.bootlog.entity.Post;

@@ -26,7 +26,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import xyz.codevomit.bootlog.blog.PostLocator;
-import xyz.codevomit.bootlog.repository.PostRepository;
+import xyz.codevomit.bootlog.data.PostRepository;
 
 /**
  *
@@ -40,6 +40,12 @@ public class BootlogConfiguration extends WebMvcConfigurerAdapter
     
     @Value("${posts.directory}")
     private String postsDirectoryPath;
+    
+    @Value("${ajp.connector.port}")
+    private int ajpPortInt;
+    
+    @Value("${ajp.connector.enabled}")
+    private boolean ajpEnabled;
     
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry)
@@ -65,14 +71,11 @@ public class BootlogConfiguration extends WebMvcConfigurerAdapter
          return new PostLocator(postsDirectoryPath);
      }
      
-     @Bean
+    @Bean
     public EmbeddedServletContainerFactory servletContainer() 
     {
-       Integer ajpPortInt = 9009;
-       Boolean ajpEnabledBool = true;    
-
         TomcatEmbeddedServletContainerFactory tomcat = new TomcatEmbeddedServletContainerFactory();
-        if (ajpEnabledBool)
+        if (ajpEnabled)
         {
             Connector ajpConnector = new Connector("AJP/1.3");
             ajpConnector.setProtocol("AJP/1.3");

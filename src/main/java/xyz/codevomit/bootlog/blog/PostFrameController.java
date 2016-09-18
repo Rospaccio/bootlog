@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import xyz.codevomit.bootlog.entity.Post;
-import xyz.codevomit.bootlog.repository.PostRepository;
+import xyz.codevomit.bootlog.data.PostRepository;
 
 /**
  *
@@ -54,7 +54,7 @@ public class PostFrameController
         Post post = postRepository.findBySourceUrl(postId);        
         String markdownContent = postLocator.renderPostContentToHtml(post);
         
-        log.info("Parsed post = \n" + markdownContent);
+        log.debug("Parsed post = \n" + markdownContent);
         
         model.addAttribute("markdownContent", markdownContent);
         model.addAttribute("postId", postId);        

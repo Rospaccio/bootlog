@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package xyz.codevomit.bootlog;
+package xyz.codevomit.bootlog.data;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import java.time.LocalDate;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
@@ -24,10 +24,8 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import xyz.codevomit.bootlog.data.PostRepository;
 import xyz.codevomit.bootlog.entity.Post;
 import xyz.codevomit.bootlog.util.TestBuilder;
 
@@ -36,50 +34,49 @@ import xyz.codevomit.bootlog.util.TestBuilder;
  * @author merka
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@DataJpaTest
+@SpringBootTest
 @Slf4j
-public class BootlogBootstrapperTest
-{    
+public class PostProviderTest
+{
     @Autowired
-    PostRepository postRepo;
+    PostProvider provider;
     
-    private TestBuilder testBuilder;
+    @Autowired
+    PostRepository repository;
     
-    public BootlogBootstrapperTest()
+    private TestBuilder builder;
+    
+    public PostProviderTest()
     {
     }
-
+    
     @PostConstruct
     public void init()
     {
-        this.testBuilder = new TestBuilder(postRepo);
-    }
-    
-    /**
-     * Test of bootstrapDatabase method, of class BootlogBootstrapper.
-     */
-    @Test
-    public void testBootstrapDatabase()
-    {
-        assertEquals(0, postRepo.count());
-        assertNotNull(postRepo);
-        BootlogBootstrapper bootstrapper = new BootlogBootstrapper(postRepo, "posts");
-        
-         bootstrapper.bootstrapDatabase();
-         
-         assertNotEquals(0, postRepo.count());
-         postRepo.findAll().stream().forEach((p) -> log.info("found post with url = " + p.getSourceUrl()));
+        this.builder = new TestBuilder(repository);
     }
     
     @Test
-    public void testDump() throws JsonProcessingException
+    public void testFindLatestPosts()
     {
-        List<Post> created = testBuilder.createAndSaveTestPosts(4);
+        assertNotNull(provider);
+        int count = 10;
+        List<Post> testPosts = builder.createAndSaveTestPosts(count);
         
-        String json = testBuilder.toJSON(created);
-        log.info(json);
+        List<Post> latest = provider.findLatestPosts(4);
         
-        // cleanup
-        postRepo.delete(created);
+        assertEquals(4, latest.size());
+        Post veryLatest = latest.get(0);
+        LocalDate expectedLatestDate = builder.getBaseDateTime().plusDays(count - 1)
+                .toLocalDate();
+        log.info("expected = " + expectedLatestDate);
+        log.info("got = " + veryLatest.getPublishedOn());
+        assertTrue(veryLatest.getPublishedOn().toLocalDate().isEqual(expectedLatestDate));
+        Post secondLatest = latest.get(1);
+        assertFalse(veryLatest.getPublishedOn().isBefore(secondLatest.getPublishedOn()));
+        
+        latest.stream().forEach((post) -> log.info("Post has publish date = " + post.getPublishedOn()));
+        //cleanup
+        repository.delete(testPosts);
     }
 }

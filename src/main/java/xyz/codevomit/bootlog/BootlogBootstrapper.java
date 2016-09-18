@@ -17,17 +17,12 @@
 package xyz.codevomit.bootlog;
 
 import java.io.File;
-import java.io.FileFilter;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Collection;
-import javax.annotation.PostConstruct;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import xyz.codevomit.bootlog.entity.Post;
-import xyz.codevomit.bootlog.repository.PostRepository;
+import xyz.codevomit.bootlog.data.PostRepository;
 
 /**
  *
@@ -85,11 +80,11 @@ public class BootlogBootstrapper
     {
         try
         {
-            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime conventionalDate = LocalDateTime.of(2016, 1, 1, 0, 0);
             String url = file.getName().replace(".md", "");
             Post post = Post.builder()
-                    .editedOn(now)
-                    .publishedOn(now)
+                    .editedOn(conventionalDate)
+                    .publishedOn(conventionalDate)
                     .sourceUrl(url)
                     .filename(file.getName())
                     .title(url)
