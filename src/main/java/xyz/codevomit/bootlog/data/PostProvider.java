@@ -47,4 +47,5 @@ public class PostProvider
         Page<Post> latestPosts = postRepository.findAll(pageable);
         return latestPosts.getContent();
     }
+    
 }

@@ -82,4 +82,11 @@ public class BootlogBootstrapperTest
         // cleanup
         postRepo.delete(created);
     }
+    
+    @Test
+    public void testReadPostsFromJson() throws JsonProcessingException
+    {
+        List<Post> created = testBuilder.createAndSaveTestPosts(4);
+        String json = testBuilder.toJSON(created);
+    }
 }
