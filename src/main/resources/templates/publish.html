@@ -40,8 +40,39 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <script src="js/vendor/highlight/highlight.pack.js" />
     </head>
     <body>
-        <div>
+        <div class="container">
             <h1>Publish a new post</h1>
+            <div>
+                <form>
+                    <div></div>
+                    <div class="form-group">
+                        <label for="postTitle" th:text="#{publish.form.label.title}">Title</label>
+                        <input type="text" class="form-control" id="postTitle" 
+                               th:placeholder="#{publish.form.label.title}"></input>
+                    </div>
+                    <div class="form-group">
+                        <label for="postUrl" th:text="#{publish.form.label.url}">URL</label>
+                        <input type="text" class="form-control" id="postUrl" 
+                               th:placeholder="#{publish.form.label.url}"></input>
+                    </div>
+                    <div class="form-group">
+                        <label for="postPublishDate" th:text="#{publish.form.label.publishDate}">Publish Date</label>
+                        <input type="date" class="form-control" id="postPublishDate"
+                               th:placeholder="#{publish.form.label.publishDate}"></input>
+                    </div> 
+                    <div class="form-group">
+                        <div>
+                            <label for="postFile" th:text="#{publish.form.label.file}"></label>
+                        </div>
+                        <div>
+                            <label class="custom-file">
+                                <input type="file" id="file" class="form-control custom-file-input"></input>
+                                <span class="custom-file-control"></span>
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </body>
 </html>
