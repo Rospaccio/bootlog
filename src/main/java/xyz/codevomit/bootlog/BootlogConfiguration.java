@@ -19,12 +19,14 @@ package xyz.codevomit.bootlog;
 import org.apache.catalina.connector.Connector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
 import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 import xyz.codevomit.bootlog.io.PostLocator;
 import xyz.codevomit.bootlog.data.PostRepository;
 
@@ -34,19 +36,20 @@ import xyz.codevomit.bootlog.data.PostRepository;
  */
 @Configuration
 public class BootlogConfiguration extends WebMvcConfigurerAdapter
-{   
+{
+
     @Value("${images.base.folder}")
     private String imagesBaseFolder;
-    
+
     @Value("${posts.directory}")
     private String postsDirectoryPath;
-    
+
     @Value("${ajp.connector.port}")
     private int ajpPortInt;
-    
+
     @Value("${ajp.connector.enabled}")
     private boolean ajpEnabled;
-    
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry)
     {
@@ -54,25 +57,26 @@ public class BootlogConfiguration extends WebMvcConfigurerAdapter
         registry.addResourceHandler("/images/**")
                 .addResourceLocations(imagesBaseFolder);
     }
-    
+
     @Bean
     @Autowired
-     public BootlogBootstrapper bootlogBootstrapper(PostRepository postRepository)
-     {
-         BootlogBootstrapper bootstrapper = new BootlogBootstrapper(postRepository,
-            postsDirectoryPath);
-         bootstrapper.bootstrapDatabase();
-         return bootstrapper;
-     }
-     
-     @Bean
-     public PostLocator postLocator()
-     {
-         return new PostLocator(postsDirectoryPath);
-     }
-     
+    @ConditionalOnProperty(name = "test.db.bootstrap", havingValue = "true")
+    public BootlogBootstrapper bootlogBootstrapper(PostRepository postRepository)
+    {
+        BootlogBootstrapper bootstrapper = new BootlogBootstrapper(postRepository,
+                postsDirectoryPath);
+        bootstrapper.bootstrapDatabase();
+        return bootstrapper;
+    }
+
     @Bean
-    public EmbeddedServletContainerFactory servletContainer() 
+    public PostLocator postLocator()
+    {
+        return new PostLocator(postsDirectoryPath);
+    }
+
+    @Bean
+    public EmbeddedServletContainerFactory servletContainer()
     {
         TomcatEmbeddedServletContainerFactory tomcat = new TomcatEmbeddedServletContainerFactory();
         if (ajpEnabled)
@@ -87,5 +91,11 @@ public class BootlogConfiguration extends WebMvcConfigurerAdapter
         }
 
         return tomcat;
+    }
+
+    @Bean
+    public Java8TimeDialect java8TimeDialect()
+    {
+        return new Java8TimeDialect();
     }
 }

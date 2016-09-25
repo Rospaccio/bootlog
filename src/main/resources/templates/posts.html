@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--
+Copyright (C) 2016 CodeVomit Productions
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<html>
+    <head>
+        <meta content="text/xhtml; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title th:text="#{posts.title}"></title>
+
+        <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+
+        <link rel="stylesheet" href="css/bootstrap.min.css" />
+        <style>            
+            body {
+                padding-top: 50px;
+                padding-bottom: 20px;
+            }
+        </style>
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css" />
+        <link rel="stylesheet"  href="css/main.css" />
+
+        <link rel="stylesheet" href="js/vendor/highlight/styles/vs.css" />
+
+        <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
+        <script src="js/vendor/highlight/highlight.pack.js" />
+    </head>
+    <body>
+        <div class="container">
+            <h1 th:text="#{posts.main.title}">posts.main.title</h1>
+            
+            <div id="postsDiv">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th th:text="#{posts.table.header.title}"></th>
+                            <th th:text="#{posts.table.header.url}"></th>
+                            <th th:text="#{posts.table.header.publishedOn}"></th>
+                            <th th:text="#{posts.table.header.actions}"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="post : ${allPosts}">
+                            <td th:text="${post.title}"></td>
+                            <td>
+                                <a th:href="@{/blog/{post.sourceUrl}}" th:text="${post.sourceUrl}"></a>
+                            </td>
+                            <td th:text="${#temporals.format(post.publishedOn)}"></td>
+                            <td>
+                                <form action="@{/posts}" method="post">
+                                    <input type="hidden" th:value="${post.id}" name="postId"></input> 
+                                    <input type="submit" th:value="#{posts.label.delete}"
+                                           class="btn btn-danger"></input>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+        </div>
+
+        <script>
+            // <!--
+            window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')
+            // -->
+        </script>
+
+        <script src="js/vendor/bootstrap.min.js"></script>
+
+        <script src="js/bootlog.js"></script>
+    </body>
+</html>

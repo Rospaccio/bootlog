@@ -43,7 +43,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <div class="container">
             <h1>Publish a new post</h1>
             <div>
-                <form th:action="@{/publish}" method="post">
+                <form th:action="@{/publish}" enctype="multipart/form-data" method="post">
                     <div></div>
                     <div class="form-group">
                         <label for="postTitle" th:text="#{publish.form.label.title}">Title</label>
@@ -68,11 +68,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             <label for="postFile" th:text="#{publish.form.label.file}"></label>
                         </div>
                         <div>
-                            <label class="custom-file">
                                 <input type="file" id="file" class="form-control custom-file-input"
                                        name="postFile"></input>
-                                <span class="custom-file-control"></span>
-                            </label>
+
                         </div>
                     </div>
                     <div>
@@ -82,5 +80,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 </form>
             </div>
         </div>
+        
+        
+        <script>
+            // <!--
+            window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')
+            // -->
+        </script>
+
+        <script src="js/vendor/bootstrap.min.js"></script>
+
+        <script src="js/bootlog.js"></script>
     </body>
 </html>
