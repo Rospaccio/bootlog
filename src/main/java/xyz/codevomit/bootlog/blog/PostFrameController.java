@@ -11,6 +11,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.view.RedirectView;
+import xyz.codevomit.bootlog.data.PostProvider;
 import xyz.codevomit.bootlog.entity.Post;
 import xyz.codevomit.bootlog.data.PostRepository;
 
@@ -27,6 +29,9 @@ public class PostFrameController
     PostRepository postRepository;
     
     @Autowired
+    PostProvider postProvider;
+    
+    @Autowired
     PostLocator postLocator;
     
     @ModelAttribute(name = "posts")
@@ -39,11 +44,14 @@ public class PostFrameController
     }
     
     @RequestMapping(path = {"/", ""})
-    public String postFrame(Model model)
+    public RedirectView postFrame(Model model)
     {
         log.info("Base URL requested, no specific post");
         model.addAttribute("prefix", "");
-        return "post-frame";
+        
+        Post latest = postProvider.findLatestPost();
+        
+        return new RedirectView("/blog/" + latest.getSourceUrl());
     }
     
     @RequestMapping("/{postId}")

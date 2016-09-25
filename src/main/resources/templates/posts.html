@@ -61,7 +61,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             </td>
                             <td th:text="${#temporals.format(post.publishedOn)}"></td>
                             <td>
-                                <form action="@{/posts}" method="post">
+                                <form th:action="@{/posts}" method="post">
                                     <input type="hidden" th:value="${post.id}" name="postId"></input> 
                                     <input type="submit" th:value="#{posts.label.delete}"
                                            class="btn btn-danger"></input>

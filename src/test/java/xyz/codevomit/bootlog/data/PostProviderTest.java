@@ -43,6 +43,9 @@ import xyz.codevomit.bootlog.util.TestBuilder;
 @Slf4j
 public class PostProviderTest
 {
+    public static final String FILENAME = "provider-test-filename.md";
+    public static final String URL = "provider-test-url";
+    
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
     
@@ -136,5 +139,25 @@ public class PostProviderTest
         File shouldNotExist = tempLocator.fileInBaseFolder(post.getFilename());
         assertFalse(shouldNotExist.exists());
         assertNull(repository.findOne(created.getId()));
+    }
+    
+    @Test
+    public void testFindLatestPost()
+    {
+        LocalDateTime now = LocalDateTime.now();
+        Post latest = Post.builder()
+                .editedOn(now)
+                .filename(FILENAME)
+                .publishedOn(now)
+                .sourceUrl(URL)
+                .title("The important title")
+                .build();
+        Post saved = repository.save(latest);
+        assertNotNull(saved.getId());
+        
+        Post latestFound = provider.findLatestPost();
+        
+        assertEquals(saved.getId(), latestFound.getId());
+                        
     }
 }

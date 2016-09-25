@@ -26,6 +26,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 import xyz.codevomit.bootlog.io.PostLocator;
 import xyz.codevomit.bootlog.entity.Post;
@@ -88,5 +89,17 @@ public class PostProvider
     {
         postLocator.deletePostFile(toDelete);
         postRepository.delete(toDelete);
+    }
+
+    public Post findLatestPost()
+    {
+        Order order = new Sort.Order(Sort.Direction.DESC, "publishedOn");
+        List<Post> oneLatest = findLatestPosts(1);
+        if(oneLatest.isEmpty())
+        {
+            return null;
+        }
+        return oneLatest.get(0);
+//        return  findLatestPosts(1).get(0);
     }
 }
