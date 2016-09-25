@@ -16,28 +16,40 @@
  */
 package xyz.codevomit.bootlog.data;
 
+import java.io.IOException;
 import java.util.List;
+import javax.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import xyz.codevomit.bootlog.io.PostLocator;
 import xyz.codevomit.bootlog.entity.Post;
+import xyz.codevomit.bootlog.exception.BootlogException;
 
 /**
  *
  * @author merka
  */
 @Service
+@Transactional
+@Slf4j
 public class PostProvider
 {
-    private PostRepository postRepository;
+    
+    private PostRepository postRepository;    
+    private PostLocator postLocator;
     
     @Autowired
-    public PostProvider(PostRepository postRepository)
+    public PostProvider(PostRepository postRepository,
+            PostLocator postLocator)
     {
         this.postRepository = postRepository;
+        this.postLocator = postLocator;
     }
     
     public List<Post> findLatestPosts(int limit)
@@ -48,4 +60,33 @@ public class PostProvider
         return latestPosts.getContent();
     }
     
+    public Post createPostWithContent(Post post, String text)
+    {
+        return createPostWithContent(post, text.getBytes());
+    }
+    
+    public Post createPostWithContent(Post post, byte[] content)
+    {
+       if(StringUtils.isBlank(post.getFilename()))
+        {
+            throw new IllegalArgumentException("Post.filename cannot be black");
+        }
+        try
+        {
+            postLocator.savePostFile(post.getFilename(), content);
+        }
+        catch(IOException io)
+        {
+            log.error("Impossible to save the post file due to a IO Exception", io);
+            throw new BootlogException(io);
+        }
+        Post saved = postRepository.save(post);
+        return saved;
+    }
+
+    public void deletePostWithContent(Post toDelete)
+    {
+        postLocator.deletePostFile(toDelete);
+        postRepository.delete(toDelete);
+    }
 }

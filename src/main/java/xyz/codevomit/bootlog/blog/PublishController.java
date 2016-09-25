@@ -16,9 +16,25 @@
  */
 package xyz.codevomit.bootlog.blog;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.view.RedirectView;
+import xyz.codevomit.bootlog.data.PostProvider;
+import xyz.codevomit.bootlog.entity.Post;
 
 /**
  *
@@ -26,11 +42,41 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 @Controller
 @RequestMapping("/publish")
+@Slf4j
 public class PublishController
 {
-    @RequestMapping(path = {""})
+    @Autowired
+    PostProvider postProvider;
+    
+    @RequestMapping(path = {""}, method = RequestMethod.GET)
     public String publish()
     {
         return "publish";
+    }
+    
+    @PostMapping(path = "")
+    public RedirectView publishNewPost(@RequestParam(name = "postFile", required = true) MultipartFile file,
+            @RequestParam(name = "title", required = true) String title,
+            @RequestParam(name = "url", required = true) String url,
+            @RequestParam(name = "publishDate", required = false) 
+                    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+                    LocalDateTime publishDate) throws IOException
+    {
+        if(log.isDebugEnabled())
+        {
+            String fileString = new String(file.getBytes());
+            log.debug(fileString);
+        }
+        
+        Post toCreate = Post.builder()
+                .filename(file.getOriginalFilename())
+                .sourceUrl(url)
+                .publishedOn(publishDate)
+                .title(title)
+                .build();
+        postProvider.createPostWithContent(toCreate, file.getBytes());        
+                
+        RedirectView redirectView = new RedirectView("/posts");
+        return redirectView;
     }
 }

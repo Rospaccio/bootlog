@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package xyz.codevomit.bootlog.blog;
+package xyz.codevomit.bootlog.io;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,6 +23,7 @@ import org.commonmark.html.HtmlRenderer;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import xyz.codevomit.bootlog.entity.Post;
+import xyz.codevomit.bootlog.exception.PostFileAlreadyExistsException;
 
 /**
  *
@@ -39,8 +40,14 @@ public class PostLocator
     
     public String readPostMarkdownContent(Post post) throws IOException
     {
-        File file = new File(postFolderPath + "/" + post.getFilename());
+        File file = fileInBaseFolder(post.getFilename());
         return FileUtils.readFileToString(file);
+    }
+    
+    public File fileInBaseFolder(String filename)
+    {
+        File file = new File(postFolderPath + "/" + filename);
+        return file;
     }
     
     public Node parsePostContent(Post post) throws IOException
@@ -57,5 +64,23 @@ public class PostLocator
         HtmlRenderer renderer = HtmlRenderer.builder().build();
         String renderedHtml = renderer.render(node);
         return renderedHtml;
+    }
+
+    public File savePostFile(String filename, byte[] mockContent) throws IOException
+    {
+        File possiblyExisting = fileInBaseFolder(filename);
+        if(possiblyExisting.exists())
+        {
+            throw new PostFileAlreadyExistsException(possiblyExisting.getAbsolutePath());
+        }
+        
+        FileUtils.writeByteArrayToFile(possiblyExisting, mockContent);
+        return possiblyExisting;
+    }
+
+    public void deletePostFile(Post toDelete)
+    {
+        File fileToDelete = fileInBaseFolder(toDelete.getFilename());
+        fileToDelete.delete();
     }
 }

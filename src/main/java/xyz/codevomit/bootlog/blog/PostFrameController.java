@@ -1,5 +1,6 @@
 package xyz.codevomit.bootlog.blog;
 
+import xyz.codevomit.bootlog.io.PostLocator;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
