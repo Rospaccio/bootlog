@@ -98,7 +98,7 @@ public class PublishControllerTest
                 .with(user("merka").password("merka").roles("USER"))
                 .with(csrf()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/posts"));
+                .andExpect(redirectedUrl("posts"));
         
         Post created = postRepo.findBySourceUrl(url);
         assertNotNull(created);

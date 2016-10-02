@@ -51,7 +51,7 @@ public class PostFrameController
         
         Post latest = postProvider.findLatestPost();
         
-        return new RedirectView("/blog/" + latest.getSourceUrl());
+        return new RedirectView("blog/" + latest.getSourceUrl());
     }
     
     @RequestMapping("/{postId}")

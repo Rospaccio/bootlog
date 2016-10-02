@@ -31,7 +31,9 @@
 
     <dependencies>
   
-<!--        <dependency>
+        <!-- Uncomment the following dependency to build a deployable war
+        P.S. Do not forget to set packaging=war        -->
+        <!--        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
             <scope>provided</scope>
@@ -134,9 +136,11 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <executable>true</executable>
+                </configuration>
             </plugin>
         </plugins>
     </build>
-
 
 </project>

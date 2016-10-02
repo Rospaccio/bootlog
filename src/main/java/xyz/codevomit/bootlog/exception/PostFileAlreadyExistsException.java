@@ -49,5 +49,12 @@ public class PostFileAlreadyExistsException extends BootlogException
         super(cause);
         this.filename = filename;
     }
+
+    @Override
+    public String getMessage()
+    {
+        return String.format("File at path %s already exists", getFilename());
+    }
+    
     
 }

@@ -64,7 +64,7 @@ public class PostFrameControllerTest
         postRepo.save(latestPost);
                 
         mockMvc.perform(get("/blog")).andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/blog/blah"));
+                .andExpect(redirectedUrl("blog/blah"));
         
         // cleanup
         postRepo.delete(latestPost);

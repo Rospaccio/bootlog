@@ -16,8 +16,13 @@
  */
 package xyz.codevomit.bootlog.blog;
 
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import xyz.codevomit.bootlog.data.PostProvider;
+import xyz.codevomit.bootlog.entity.Post;
 
 /**
  *
@@ -27,6 +32,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/")
 public class IndexController
 {
+    @Autowired
+    PostProvider postProvider;
+    
+    @ModelAttribute(name = "latestPosts")
+    public List<Post> latestPosts()
+    {
+        return postProvider.findLatestPosts(3);
+    }
+    
     @RequestMapping(path = {"/", ""})
     public String index()
     {

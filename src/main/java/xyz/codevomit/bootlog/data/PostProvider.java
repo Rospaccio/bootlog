@@ -40,8 +40,7 @@ import xyz.codevomit.bootlog.exception.BootlogException;
 @Transactional
 @Slf4j
 public class PostProvider
-{
-    
+{    
     private PostRepository postRepository;    
     private PostLocator postLocator;
     

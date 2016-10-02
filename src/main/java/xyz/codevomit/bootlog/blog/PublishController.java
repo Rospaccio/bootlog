@@ -76,7 +76,7 @@ public class PublishController
                 .build();
         postProvider.createPostWithContent(toCreate, file.getBytes());        
                 
-        RedirectView redirectView = new RedirectView("/posts");
+        RedirectView redirectView = new RedirectView("posts");
         return redirectView;
     }
 }
