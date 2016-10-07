@@ -31,9 +31,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
-import xyz.codevomit.bootlog.data.PostProvider;
 import xyz.codevomit.bootlog.data.PostRepository;
 import xyz.codevomit.bootlog.entity.Post;
+import xyz.codevomit.bootlog.service.PostService;
 
 /**
  *
@@ -61,7 +61,7 @@ public class PublishControllerTest
     @Autowired
     private PostRepository postRepo;
     @Autowired
-    private PostProvider postProvider;
+    private PostService postService;
             
     public PublishControllerTest()
     {
@@ -82,10 +82,10 @@ public class PublishControllerTest
         String filename = "test-markdown-file.md";
         
         Post post = postRepo.findBySourceUrl(url);
-        if(post != null)
-        {
-            postProvider.deletePostWithContent(post);
-        }
+//        if(post != null)
+//        {
+//            postProvider.deletePostWithContent(post);
+//        }
         
         byte[] postFileContent = MARKDOWN_FRAGMENT.getBytes(Charset.forName("UTF-8"));
         MockMultipartFile part = new MockMultipartFile("postFile", 
@@ -105,9 +105,8 @@ public class PublishControllerTest
         assertEquals("post-title", created.getTitle());
         assertEquals(url, created.getSourceUrl());
         assertEquals(LocalDateTime.of(2016, 9, 24, 12, 12), created.getPublishedOn());
-        assertEquals(filename, created.getFilename());
         
         // cleanup
-        postProvider.deletePostWithContent(created);
+//        postProvider.deletePostWithContent(created);
     }
 }

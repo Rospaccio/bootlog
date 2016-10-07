@@ -27,8 +27,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
-import xyz.codevomit.bootlog.io.PostLocator;
 import xyz.codevomit.bootlog.data.PostRepository;
+import xyz.codevomit.bootlog.service.PostService;
 
 /**
  *
@@ -70,12 +70,6 @@ public class BootlogConfiguration extends WebMvcConfigurerAdapter
     }
 
     @Bean
-    public PostLocator postLocator()
-    {
-        return new PostLocator(postsDirectoryPath);
-    }
-
-    @Bean
     public EmbeddedServletContainerFactory servletContainer()
     {
         TomcatEmbeddedServletContainerFactory tomcat = new TomcatEmbeddedServletContainerFactory();
@@ -89,10 +83,16 @@ public class BootlogConfiguration extends WebMvcConfigurerAdapter
             ajpConnector.setScheme("http");
             tomcat.addAdditionalTomcatConnectors(ajpConnector);
         }
-
         return tomcat;
     }
 
+    @Bean
+    @Autowired
+    public PostService postService(PostRepository postRepository)
+    {
+        return new PostService(postRepository);
+    }
+    
     @Bean
     public Java8TimeDialect java8TimeDialect()
     {

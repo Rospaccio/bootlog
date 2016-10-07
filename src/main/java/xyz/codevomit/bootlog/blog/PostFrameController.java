@@ -1,6 +1,5 @@
 package xyz.codevomit.bootlog.blog;
 
-import xyz.codevomit.bootlog.io.PostLocator;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,9 +11,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.view.RedirectView;
-import xyz.codevomit.bootlog.data.PostProvider;
 import xyz.codevomit.bootlog.entity.Post;
 import xyz.codevomit.bootlog.data.PostRepository;
+import xyz.codevomit.bootlog.markdown.MarkdownUtils;
+import xyz.codevomit.bootlog.service.PostService;
 
 /**
  *
@@ -29,11 +29,8 @@ public class PostFrameController
     PostRepository postRepository;
     
     @Autowired
-    PostProvider postProvider;
-    
-    @Autowired
-    PostLocator postLocator;
-    
+    PostService postService;
+        
     @ModelAttribute(name = "posts")
     public List<Post> posts()
     {
@@ -49,7 +46,7 @@ public class PostFrameController
         log.info("Base URL requested, no specific post");
         model.addAttribute("prefix", "");
         
-        Post latest = postProvider.findLatestPost();
+        Post latest = postService.findLatestPost();
         
         return new RedirectView("blog/" + latest.getSourceUrl());
     }
@@ -61,7 +58,8 @@ public class PostFrameController
         log.info("Request post with id = " + postId);
         
         Post post = postRepository.findBySourceUrl(postId);        
-        String markdownContent = postLocator.renderPostContentToHtml(post);
+        String markdownContent = MarkdownUtils.renderMarkdownTextToHtml(
+                post.getText().getValue());
         
         log.debug("Parsed post = \n" + markdownContent);
         

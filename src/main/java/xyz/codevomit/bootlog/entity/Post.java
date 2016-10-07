@@ -17,11 +17,15 @@
 package xyz.codevomit.bootlog.entity;
 
 import java.time.LocalDateTime;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -46,13 +50,15 @@ public class Post
     @Column(unique = true, nullable = false)
     String sourceUrl;
     
-    @Column(unique = true, nullable = false)
-    String filename;
-    
+    @Column
     String title;
     
+    @Column
     LocalDateTime publishedOn;
     
     @LastModifiedDate
     LocalDateTime editedOn;
+    
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    Text text;
 }

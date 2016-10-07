@@ -14,36 +14,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package xyz.codevomit.bootlog.blog;
+package xyz.codevomit.bootlog.markdown;
 
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import xyz.codevomit.bootlog.entity.Post;
-import xyz.codevomit.bootlog.service.PostService;
+import java.io.IOException;
+import org.commonmark.html.HtmlRenderer;
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
 
 /**
  *
  * @author merka
  */
-@Controller
-@RequestMapping("/")
-public class IndexController
+public class MarkdownUtils
 {
-    @Autowired
-    PostService postService;
-    
-    @ModelAttribute(name = "latestPosts")
-    public List<Post> latestPosts()
+    public static String renderMarkdownTextToHtml(String markdownText) throws IOException
     {
-        return postService.findLatestPosts(3);
+        Parser parser = Parser.builder().build();
+        Node node = parser.parse(markdownText);
+        return renderMarkdownTextToHtml(node);
     }
     
-    @RequestMapping(path = {"/", ""})
-    public String index()
+    public static String renderMarkdownTextToHtml(Node markdownNode)
     {
-        return "index";
+        HtmlRenderer renderer = HtmlRenderer.builder().build();
+        String renderedHtml = renderer.render(markdownNode);
+        return renderedHtml;
     }
 }

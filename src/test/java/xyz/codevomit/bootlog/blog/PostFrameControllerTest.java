@@ -56,7 +56,6 @@ public class PostFrameControllerTest
         LocalDateTime now = LocalDateTime.now();
         Post latestPost = Post.builder()
                 .editedOn(now)
-                .filename("blah.md")
                 .publishedOn(now)
                 .sourceUrl("blah")
                 .title("Blah title")

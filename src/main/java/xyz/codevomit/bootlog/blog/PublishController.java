@@ -18,23 +18,18 @@ package xyz.codevomit.bootlog.blog;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.view.RedirectView;
-import xyz.codevomit.bootlog.data.PostProvider;
 import xyz.codevomit.bootlog.entity.Post;
+import xyz.codevomit.bootlog.service.PostService;
 
 /**
  *
@@ -46,7 +41,7 @@ import xyz.codevomit.bootlog.entity.Post;
 public class PublishController
 {
     @Autowired
-    PostProvider postProvider;
+    PostService postService;
     
     @RequestMapping(path = {""}, method = RequestMethod.GET)
     public String publish()
@@ -62,20 +57,19 @@ public class PublishController
                     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
                     LocalDateTime publishDate) throws IOException
     {
-        if(log.isDebugEnabled())
+        String textValue = new String(file.getBytes());
+        if (log.isDebugEnabled())
         {
-            String fileString = new String(file.getBytes());
-            log.debug(fileString);
+            log.debug(textValue);
         }
-        
+
         Post toCreate = Post.builder()
-                .filename(file.getOriginalFilename())
                 .sourceUrl(url)
                 .publishedOn(publishDate)
                 .title(title)
                 .build();
-        postProvider.createPostWithContent(toCreate, file.getBytes());        
-                
+        postService.createPostWithText(toCreate, textValue);
+
         RedirectView redirectView = new RedirectView("posts");
         return redirectView;
     }

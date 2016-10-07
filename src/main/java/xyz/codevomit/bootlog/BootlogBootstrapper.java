@@ -50,50 +50,50 @@ public class BootlogBootstrapper
     
     public void bootstrapDatabase()
     {
-        if(postRepository.count() == 0)
-        {
-            insertExistingPostsInDatabase();
-        }
+//        if(postRepository.count() == 0)
+//        {
+//            insertExistingPostsInDatabase();
+//        }
     }
 
-    private void insertExistingPostsInDatabase()
-    {
-        File baseDirectory = new File(postsDirectoryPath);
-        if(!baseDirectory.exists())
-        {
-            throw new IllegalStateException("Post folder '" + postsDirectoryPath 
-                    + "' not found");
-        }
-        if(baseDirectory.isFile())
-        {
-            throw new IllegalStateException("Post folder path '" + postsDirectoryPath 
-                    + "' correspond to a file, not a directory");
-        }
-        
-        Collection<File> markdownFiles = FileUtils.listFiles(baseDirectory, 
-                new String[]{"md"}, false);
-        
-        markdownFiles.stream().forEach((file) -> saveDatabaseEntryFor(file));
-    }
+//    private void insertExistingPostsInDatabase()
+//    {
+//        File baseDirectory = new File(postsDirectoryPath);
+//        if(!baseDirectory.exists())
+//        {
+//            throw new IllegalStateException("Post folder '" + postsDirectoryPath 
+//                    + "' not found");
+//        }
+//        if(baseDirectory.isFile())
+//        {
+//            throw new IllegalStateException("Post folder path '" + postsDirectoryPath 
+//                    + "' correspond to a file, not a directory");
+//        }
+//        
+//        Collection<File> markdownFiles = FileUtils.listFiles(baseDirectory, 
+//                new String[]{"md"}, false);
+//        
+//        markdownFiles.stream().forEach((file) -> saveDatabaseEntryFor(file));
+//    }
 
-    private void saveDatabaseEntryFor(File file)
-    {
-        try
-        {
-            LocalDateTime conventionalDate = LocalDateTime.of(2016, 1, 1, 0, 0);
-            String url = file.getName().replace(".md", "");
-            Post post = Post.builder()
-                    .editedOn(conventionalDate)
-                    .publishedOn(conventionalDate)
-                    .sourceUrl(url)
-                    .filename(file.getName())
-                    .title(url)
-                    .build();
-            postRepository.save(post);
-        }
-        catch (Exception e)
-        {
-            throw new RuntimeException(e);
-        }
-    }
+//    private void saveDatabaseEntryFor(File file)
+//    {
+//        try
+//        {
+//            LocalDateTime conventionalDate = LocalDateTime.of(2016, 1, 1, 0, 0);
+//            String url = file.getName().replace(".md", "");
+//            Post post = Post.builder()
+//                    .editedOn(conventionalDate)
+//                    .publishedOn(conventionalDate)
+//                    .sourceUrl(url)
+//                    .filename(file.getName())
+//                    .title(url)
+//                    .build();
+//            postRepository.save(post);
+//        }
+//        catch (Exception e)
+//        {
+//            throw new RuntimeException(e);
+//        }
+//    }
 }

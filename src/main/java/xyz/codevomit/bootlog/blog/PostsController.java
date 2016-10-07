@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.view.RedirectView;
-import xyz.codevomit.bootlog.data.PostProvider;
 import xyz.codevomit.bootlog.data.PostRepository;
 import xyz.codevomit.bootlog.entity.Post;
 
@@ -39,9 +38,6 @@ public class PostsController
 {
     @Autowired
     PostRepository postRepo;
-    
-    @Autowired
-    PostProvider postProvider;
     
     @ModelAttribute(name = "allPosts")
     public List<Post> allPosts()
@@ -59,7 +55,7 @@ public class PostsController
     public RedirectView delete(@RequestParam(name = "postId", required = true) Long postId)
     {
         Post toDelete = postRepo.findOne(postId);
-        postProvider.deletePostWithContent(toDelete);
+        postRepo.delete(toDelete);
         RedirectView view = new RedirectView("/posts");
         return view;
     }

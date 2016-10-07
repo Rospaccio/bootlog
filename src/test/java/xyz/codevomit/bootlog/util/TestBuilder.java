@@ -25,8 +25,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import xyz.codevomit.bootlog.data.PostRepository;
 import xyz.codevomit.bootlog.entity.Post;
 
@@ -62,7 +60,6 @@ public class TestBuilder
         log.info("publish date is going to be " + baseDateTime.plusDays(index));
         return Post.builder().publishedOn(baseDateTime.plusDays(index))
                 .editedOn(baseDateTime.plusDays(index))
-                .filename("test_" + index + ".md")
                 .sourceUrl("test_" + index)
                 .build();
     }

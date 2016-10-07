@@ -14,36 +14,39 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package xyz.codevomit.bootlog.blog;
+package xyz.codevomit.bootlog.entity;
 
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import xyz.codevomit.bootlog.entity.Post;
-import xyz.codevomit.bootlog.service.PostService;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  *
  * @author merka
  */
-@Controller
-@RequestMapping("/")
-public class IndexController
+@Entity
+@Data
+@AllArgsConstructor
+@Builder
+@NoArgsConstructor
+public class Text
 {
-    @Autowired
-    PostService postService;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    Long id;
     
-    @ModelAttribute(name = "latestPosts")
-    public List<Post> latestPosts()
-    {
-        return postService.findLatestPosts(3);
-    }
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Post post;
     
-    @RequestMapping(path = {"/", ""})
-    public String index()
-    {
-        return "index";
-    }
+    @Column
+    String value;
 }

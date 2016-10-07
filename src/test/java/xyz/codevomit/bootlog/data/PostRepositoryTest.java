@@ -65,7 +65,6 @@ public class PostRepositoryTest
         Post post = Post.builder()
                 .title("Rospo")
                 .sourceUrl("www.sticazzi.com")
-                .filename("asdf")
                 .editedOn(LocalDateTime.now())
                 .publishedOn(LocalDateTime.now())
                 .build();
