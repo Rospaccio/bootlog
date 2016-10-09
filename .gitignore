@@ -70,3 +70,7 @@ buildNumber.properties
 *.log
 *.log.*
 /nbproject/
+
+mvnw
+mvnw.cmd
+.mvn/
