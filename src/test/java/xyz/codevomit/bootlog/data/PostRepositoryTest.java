@@ -19,6 +19,7 @@ package xyz.codevomit.bootlog.data;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.runner.RunWith;
@@ -27,6 +28,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.*;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import xyz.codevomit.bootlog.entity.Post;
+import xyz.codevomit.bootlog.entity.Text;
 import xyz.codevomit.bootlog.util.TestBuilder;
 
 /**
@@ -35,6 +37,7 @@ import xyz.codevomit.bootlog.util.TestBuilder;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @DataJpaTest
+@Slf4j
 public class PostRepositoryTest
 {
     private TestBuilder testBuilder;
@@ -62,12 +65,7 @@ public class PostRepositoryTest
     @Test
     public void testCRUD()
     {
-        Post post = Post.builder()
-                .title("Rospo")
-                .sourceUrl("www.sticazzi.com")
-                .editedOn(LocalDateTime.now())
-                .publishedOn(LocalDateTime.now())
-                .build();
+        Post post = createPost();
         
         Post saved = postRepository.save(post);
         assertNotNull(saved.getId());
@@ -78,6 +76,17 @@ public class PostRepositoryTest
         postRepository.delete(saved);
         retrieved = postRepository.findOne(saved.getId());
         assertNull(retrieved);
+    }
+    
+    private Post createPost()
+    {
+         Post post = Post.builder()
+                .title("Rospo")
+                .sourceUrl("www.sticazzi.com")
+                .editedOn(LocalDateTime.now())
+                .publishedOn(LocalDateTime.now())
+                .build();
+         return post;
     }
     
     public void testFindBySourceUrl()
@@ -110,5 +119,23 @@ public class PostRepositoryTest
         
         // cleanup
         postRepository.delete(testPosts);
+    }
+    
+    @Test
+    public void testSavePostAndText()
+    {
+        Post post = createPost();
+        Post saved = postRepository.save(post);
+        assertNotNull(saved);
+        Text text = Text.builder()
+                .post(saved)
+                .value("TEST").build();
+        saved.setText(text);
+        Post savedAgain = postRepository.save(saved);
+        assertNotNull(savedAgain);
+        
+        Text retrievedText = savedAgain.getText();
+        assertNotNull(retrievedText);
+        log.info("Text found = {}", retrievedText);
     }
 }

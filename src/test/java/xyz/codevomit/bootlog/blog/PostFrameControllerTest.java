@@ -24,9 +24,9 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import xyz.codevomit.bootlog.data.PostRepository;
@@ -70,8 +70,16 @@ public class PostFrameControllerTest
     }
     
     @Test
-    public void testShowPost() throws Exception
+    public void testShowPostNotPresent() throws Exception
     {
+        if(postRepo.count() > 0)
+        {
+            postRepo.deleteAll();
+        }
+        assertTrue(postRepo.count() == 0);
+        MvcResult result = mockMvc.perform(get("/blog")).andExpect(status().is2xxSuccessful())
+                .andReturn();
+        assertNull(result.getModelAndView().getModel().get(PostFrameController.MARKDOWN_CONTENT));
     }
     
 }

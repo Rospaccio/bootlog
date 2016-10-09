@@ -16,13 +16,16 @@
  */
 package xyz.codevomit.bootlog.service;
 
+import java.time.LocalDateTime;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import xyz.codevomit.bootlog.data.PostRepository;
 import xyz.codevomit.bootlog.entity.Post;
+import xyz.codevomit.bootlog.entity.Text;
 import xyz.codevomit.bootlog.markdown.MarkdownUtilsTest;
 
 /**
@@ -30,9 +33,12 @@ import xyz.codevomit.bootlog.markdown.MarkdownUtilsTest;
  * @author merka
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(properties = "spring.datasource.url=jdbc:h2:mem:testdb;DB_CLOSE_ON_EXIT=FALSE")
+@SpringBootTest(properties = {"spring.datasource.url=jdbc:h2:mem:testdb;DB_CLOSE_ON_EXIT=FALSE"
+    , "test.db.bootstrap=false"})
 public class PostServiceTest
 {    
+    @Autowired
+    PostRepository postRepo;
     @Autowired
     PostService postService;
     
@@ -60,6 +66,28 @@ public class PostServiceTest
         assertEquals(MarkdownUtilsTest.MARKDOWN_SAMPLE, text);
     }
 
+    @Test
+    public void testGetTextValueByPost()
+    {
+        Post post = Post.builder()
+                .title("test")
+                .editedOn(LocalDateTime.now())
+                .publishedOn(LocalDateTime.now())
+                .sourceUrl("test-01")
+                .build();
+        Post saved = postService.createPostWithText(post, MarkdownUtilsTest.MARKDOWN_SAMPLE);
+        assertNotNull(saved);
+        
+        Post found = postRepo.findOne(saved.getId());
+        assertNotNull(found);
+        assertNotNull(found.getText());
+        
+        String textValue = postService.getTextValueByPost(saved);
+        
+        assertNotNull(textValue);
+        assertEquals(MarkdownUtilsTest.MARKDOWN_SAMPLE, textValue);
+    }
+    
     @Test
     public void testFindLatestPosts()
     {

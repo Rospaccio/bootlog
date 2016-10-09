@@ -29,6 +29,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import xyz.codevomit.bootlog.data.PostRepository;
 import xyz.codevomit.bootlog.entity.Post;
+import xyz.codevomit.bootlog.service.PostService;
 import xyz.codevomit.bootlog.util.TestBuilder;
 
 /**
@@ -36,12 +37,15 @@ import xyz.codevomit.bootlog.util.TestBuilder;
  * @author merka
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@DataJpaTest
+@SpringBootTest(properties = {"spring.datasource.url=jdbc:h2:mem:testdb;DB_CLOSE_ON_EXIT=FALSE", "test.db.bootstrap=false"})
 @Slf4j
 public class BootlogBootstrapperTest
 {    
     @Autowired
     PostRepository postRepo;
+    
+    @Autowired
+    PostService postService;
     
     private TestBuilder testBuilder;
     
@@ -63,7 +67,8 @@ public class BootlogBootstrapperTest
     {
         assertEquals(0, postRepo.count());
         assertNotNull(postRepo);
-        BootlogBootstrapper bootstrapper = new BootlogBootstrapper(postRepo, "posts");
+        BootlogBootstrapper bootstrapper = new BootlogBootstrapper(postRepo,
+                postService, "posts");
         
          bootstrapper.bootstrapDatabase();
          

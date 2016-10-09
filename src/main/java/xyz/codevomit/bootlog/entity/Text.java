@@ -23,30 +23,38 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  *
  * @author merka
  */
 @Entity
-@Data
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
 public class Text
 {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Getter
     Long id;
-    
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @Getter @Setter
+//    @PrimaryKeyJoinColumn(name="owner_id", referencedColumnName = "id")
     private Post post;
-    
+
     @Column
+    @Lob
+    @Getter
     String value;
 }

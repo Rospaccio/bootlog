@@ -28,6 +28,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 import xyz.codevomit.bootlog.data.PostRepository;
+import xyz.codevomit.bootlog.data.TextRepository;
 import xyz.codevomit.bootlog.service.PostService;
 
 /**
@@ -37,7 +38,6 @@ import xyz.codevomit.bootlog.service.PostService;
 @Configuration
 public class BootlogConfiguration extends WebMvcConfigurerAdapter
 {
-
     @Value("${images.base.folder}")
     private String imagesBaseFolder;
 
@@ -61,9 +61,11 @@ public class BootlogConfiguration extends WebMvcConfigurerAdapter
     @Bean
     @Autowired
     @ConditionalOnProperty(name = "test.db.bootstrap", havingValue = "true")
-    public BootlogBootstrapper bootlogBootstrapper(PostRepository postRepository)
+    public BootlogBootstrapper bootlogBootstrapper(PostRepository postRepository,
+            PostService postService)
     {
         BootlogBootstrapper bootstrapper = new BootlogBootstrapper(postRepository,
+                postService,
                 postsDirectoryPath);
         bootstrapper.bootstrapDatabase();
         return bootstrapper;
@@ -88,9 +90,10 @@ public class BootlogConfiguration extends WebMvcConfigurerAdapter
 
     @Bean
     @Autowired
-    public PostService postService(PostRepository postRepository)
+    public PostService postService(PostRepository postRepository,
+            TextRepository textRepository)
     {
-        return new PostService(postRepository);
+        return new PostService(postRepository, textRepository);
     }
     
     @Bean

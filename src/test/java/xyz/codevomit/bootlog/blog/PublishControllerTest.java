@@ -68,7 +68,6 @@ public class PublishControllerTest
     }
 
     @Test
-    @Ignore
     public void testGetPublishWithoutAuth() throws Exception
     {
         mockMvc.perform(get("/publish")).andExpect(status().is3xxRedirection())
@@ -105,6 +104,10 @@ public class PublishControllerTest
         assertEquals("post-title", created.getTitle());
         assertEquals(url, created.getSourceUrl());
         assertEquals(LocalDateTime.of(2016, 9, 24, 12, 12), created.getPublishedOn());
+        Post foundAgain = postRepo.findOne(created.getId());
+        assertNotNull(foundAgain);
+        String text = postService.getTextValueByPost(foundAgain); // created.getText().getValue();
+        assertEquals(MARKDOWN_FRAGMENT, text);
         
         // cleanup
 //        postProvider.deletePostWithContent(created);

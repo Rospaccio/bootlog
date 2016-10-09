@@ -17,13 +17,16 @@
 package xyz.codevomit.bootlog.service;
 
 import java.util.List;
+import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import xyz.codevomit.bootlog.data.PostRepository;
+import xyz.codevomit.bootlog.data.TextRepository;
 import xyz.codevomit.bootlog.entity.Post;
 import xyz.codevomit.bootlog.entity.Text;
+import xyz.codevomit.bootlog.exception.TextNotFoundException;
 
 /**
  *
@@ -31,23 +34,29 @@ import xyz.codevomit.bootlog.entity.Text;
  */
 public class PostService
 {
+
     PostRepository postRepo;
-    
-    public PostService(PostRepository postRepository)
+    TextRepository textRepository;
+
+    public PostService(PostRepository postRepository,
+            TextRepository textRepository)
     {
         this.postRepo = postRepository;
+        this.textRepository = textRepository;
     }
-            
+
     public Post createPostWithText(Post post, String textValue)
     {
+//        Post saved = postRepo.save(post);
         Text text = Text.builder()
                 .post(post)
                 .value(textValue)
                 .build();
+        text.setPost(post);
         post.setText(text);
-        return postRepo.save(post);        
+        return postRepo.save(post);
     }
-    
+
     public List<Post> findLatestPosts(int limit)
     {
         Sort sort = new Sort(Sort.Direction.DESC, "publishedOn");
@@ -55,14 +64,24 @@ public class PostService
         Page<Post> latestPosts = postRepo.findAll(pageable);
         return latestPosts.getContent();
     }
-    
-        public Post findLatestPost()
+
+    public Post findLatestPost()
     {
         List<Post> oneLatest = findLatestPosts(1);
-        if(oneLatest.isEmpty())
+        if (oneLatest.isEmpty())
         {
             return null;
         }
         return oneLatest.get(0);
+    }
+    
+    public String getTextValueByPost(Post post)
+    {
+        Text textObject = textRepository.findOneByPost(post);
+        if(textObject == null)
+        {
+            throw new TextNotFoundException("No text associated for post with id " + post.getId());
+        }
+        return textObject.getValue();
     }
 }
