@@ -68,7 +68,7 @@ public class BootlogBootstrapperTest
         assertEquals(0, postRepo.count());
         assertNotNull(postRepo);
         BootlogBootstrapper bootstrapper = new BootlogBootstrapper(postRepo,
-                postService, "posts");
+                postService, "D:/temp/posts");
         
          bootstrapper.bootstrapDatabase();
          

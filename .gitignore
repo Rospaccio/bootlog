@@ -53,6 +53,8 @@ nbdist/
 nbactions.xml
 .nb-gradle/
 nbaction*
+licenseheader.txt
+nb-configuration.xml
 
 #Maven
 target/
