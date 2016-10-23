@@ -25,15 +25,18 @@ public class BootlogApplication extends SpringBootServletInitializer
     
     public static final String GREETINGS_SUBTITLE = "No developers have been "
             + "harassed during the development of this software";
+
+    public static final String DUMMY = "test";
+    
+    public static void main(String[] args)
+    {
+        SpringApplication.run(BootlogApplication.class, args);
+    }
+
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application)
     {
         return application.sources(BootlogApplication.class);
-    }
-
-    public static void main(String[] args)
-    {
-        SpringApplication.run(BootlogApplication.class, args);
     }
     
     @PostConstruct

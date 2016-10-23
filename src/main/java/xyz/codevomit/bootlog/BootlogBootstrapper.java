@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.boot.SpringApplication;
 import xyz.codevomit.bootlog.entity.Post;
 import xyz.codevomit.bootlog.data.PostRepository;
 import xyz.codevomit.bootlog.service.PostService;
@@ -31,27 +32,28 @@ import xyz.codevomit.bootlog.service.PostService;
  */
 public class BootlogBootstrapper
 {
+
     private String postsDirectoryPath;
-    
+
     private PostRepository postRepository;
-    
+
     private PostService postService;
-    
-    public BootlogBootstrapper(PostRepository postRepository, 
+
+    public BootlogBootstrapper(PostRepository postRepository,
             PostService postService,
             String postDirectoryPath)
     {
         this.postRepository = postRepository;
         this.postService = postService;
-        if(StringUtils.isNotBlank(postDirectoryPath))
+        if (StringUtils.isNotBlank(postDirectoryPath))
         {
             this.postsDirectoryPath = postDirectoryPath;
         }
     }
-    
+
     public void bootstrapDatabase()
     {
-        if(postRepository.count() == 0)
+        if (postRepository.count() == 0)
         {
             insertDefaultPostsInDatabase();
         }
@@ -60,20 +62,23 @@ public class BootlogBootstrapper
     private void insertDefaultPostsInDatabase()
     {
         File baseDirectory = new File(postsDirectoryPath);
-        if(!baseDirectory.exists())
+        if (!baseDirectory.exists())
         {
-            throw new IllegalStateException("Post folder '" + postsDirectoryPath 
+            throw new IllegalStateException("Post folder '" + postsDirectoryPath
                     + "' not found");
         }
-        if(baseDirectory.isFile())
+        if (baseDirectory.isFile())
         {
-            throw new IllegalStateException("Post folder path '" + postsDirectoryPath 
+            throw new IllegalStateException("Post folder path '" + postsDirectoryPath
                     + "' correspond to a file, not a directory");
         }
-        
-        Collection<File> markdownFiles = FileUtils.listFiles(baseDirectory, 
-                new String[]{"md"}, false);
-        
+
+        Collection<File> markdownFiles = FileUtils.listFiles(baseDirectory,
+                new String[]
+                {
+                    "md"
+                }, false);
+
         markdownFiles.stream().forEach((file) -> saveDatabaseEntryFor(file));
     }
 

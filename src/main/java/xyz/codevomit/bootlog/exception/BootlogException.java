@@ -22,7 +22,6 @@ package xyz.codevomit.bootlog.exception;
  */
 public class BootlogException extends RuntimeException
 {
-
     public BootlogException()
     {
     }
