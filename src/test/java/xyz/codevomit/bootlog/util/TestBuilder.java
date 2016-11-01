@@ -26,7 +26,6 @@ import java.util.stream.IntStream;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import xyz.codevomit.bootlog.data.PostRepository;
 import xyz.codevomit.bootlog.entity.Post;
 import xyz.codevomit.bootlog.entity.Text;
@@ -94,7 +93,7 @@ public class TestBuilder
                 .build();
         Post post = Post.builder()
                 .editedOn(now)
-                .publishedOn(now)
+                .publishedOn(now.plusMinutes(1))
                 .sourceUrl("test-url" + i)
                 .title("The title of " + i)
                 .text(text)

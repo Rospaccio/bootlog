@@ -77,11 +77,14 @@ public class BootlogBootstrapper
                 {
                     "md"
                 }, false);
-
-        markdownFiles.stream().forEach((file) -> saveDatabaseEntryFor(file));
+        int index = 0;
+        for(File file : markdownFiles)
+        {
+            saveDatabaseEntryFor(file, index++);
+        }
     }
 
-    private void saveDatabaseEntryFor(File file)
+    private void saveDatabaseEntryFor(File file, int index)
     {
         try
         {
@@ -89,7 +92,7 @@ public class BootlogBootstrapper
             String url = file.getName().replace(".md", "");
             Post post = Post.builder()
                     .editedOn(conventionalDate)
-                    .publishedOn(conventionalDate)
+                    .publishedOn(conventionalDate.plusDays(index))
                     .sourceUrl(url)
                     .title("The Title of " + url)
                     .build();

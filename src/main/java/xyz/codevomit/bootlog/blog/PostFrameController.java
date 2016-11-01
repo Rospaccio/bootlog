@@ -51,6 +51,10 @@ public class PostFrameController
     {
         log.info("Retrieving posts");
         List<Post> posts = new ArrayList<>(postRepository.findAllByOrderByPublishedOnDesc());
+        if(log.isInfoEnabled())
+        {
+            posts.stream().forEach((post) -> log.info(post.getPublishedOn().toString()));
+        }
         log.info("Found " + posts.size() + " elements");
         return posts;
     }

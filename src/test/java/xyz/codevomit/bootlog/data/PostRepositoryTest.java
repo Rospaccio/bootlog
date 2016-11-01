@@ -153,6 +153,8 @@ public class PostRepositoryTest
                     ordered.get(i + 1).getPublishedOn()));
         }
         
+        assertEquals(posts.get(count - 1).getId(), ordered.get(0).getId());
+        
         // cleanup
         postRepository.delete(posts);
     }
