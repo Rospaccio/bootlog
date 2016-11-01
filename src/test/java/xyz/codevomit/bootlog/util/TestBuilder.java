@@ -25,8 +25,12 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import xyz.codevomit.bootlog.data.PostRepository;
 import xyz.codevomit.bootlog.entity.Post;
+import xyz.codevomit.bootlog.entity.Text;
+import xyz.codevomit.bootlog.service.PostService;
 
 /**
  *
@@ -36,24 +40,26 @@ import xyz.codevomit.bootlog.entity.Post;
 public class TestBuilder
 {
     @Getter
-    PostRepository postRepository;
-    
+    PostRepository postRepo;
+    @Autowired
+    PostService postService;
+
     @Getter
-    final LocalDateTime baseDateTime =  LocalDateTime.of(2016, 9, 1, 12, 12);
+    final LocalDateTime baseDateTime = LocalDateTime.of(2016, 9, 1, 12, 12);
 
     public TestBuilder(PostRepository repository)
     {
-        this.postRepository =  repository;
+        this.postRepo = repository;
     }
-    
+
     public List<Post> createAndSaveTestPosts(int count)
     {
         return IntStream.range(0, count)
                 .mapToObj((index) -> buildTestPost(index))
-                .map((post) -> postRepository.save(post))
+                .map((post) -> postRepo.save(post))
                 .collect(Collectors.toList());
     }
-    
+
     public Post buildTestPost(int index)
     {
         log.info("building test post for index " + index);
@@ -63,12 +69,36 @@ public class TestBuilder
                 .sourceUrl("test_" + index)
                 .build();
     }
-    
+
     public String toJSON(List<Post> posts) throws JsonProcessingException
     {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
         String json = mapper.writeValueAsString(posts);
         return json;
+    }
+
+    public List<Post> insertTestPosts(int count)
+    {
+        return IntStream.range(0, count)
+                .mapToObj((i) -> newTestPost(i))
+                .map((post) -> postRepo.save(post))
+                .collect(Collectors.toList());
+    }
+
+    public Post newTestPost(int i)
+    {
+        LocalDateTime now = LocalDateTime.now();
+        Text text = Text.builder()
+                .value("Testing the sorting")
+                .build();
+        Post post = Post.builder()
+                .editedOn(now)
+                .publishedOn(now)
+                .sourceUrl("test-url" + i)
+                .title("The title of " + i)
+                .text(text)
+                .build();
+        return post;
     }
 }

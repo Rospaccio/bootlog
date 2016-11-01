@@ -17,6 +17,9 @@
 package xyz.codevomit.bootlog.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.runner.RunWith;
@@ -91,11 +94,57 @@ public class PostServiceTest
     @Test
     public void testFindLatestPosts()
     {
+        int count = 10;
+        List<Post> posts = insertTestPosts(count);
+        assertTrue(postRepo.count() >= count);
+        
+        List<Post> sortedDesc = postService.findLatestPosts(count);
+        
+        for(int i = 0; i < sortedDesc.size() - 1; i++)
+        {
+            assertTrue(sortedDesc.get(i).getPublishedOn().isAfter(
+                    sortedDesc.get(i + 1).getPublishedOn()));
+        }
+        
+        // cleanup
+        postRepo.delete(posts);
     }
 
     @Test
     public void testFindLatestPost()
     {
+        List<Post> posts = insertTestPosts(10);
+        
+        List<Post> allLatestOrdered = postService.findLatestPosts(10);
+        Post latest = postService.findLatestPost();
+        
+        assertEquals(latest.getId(), allLatestOrdered.get(0).getId());
+        
+        // cleanup
+        postRepo.delete(posts);
     }
     
+    private List<Post> insertTestPosts(int count)
+    {
+        return IntStream.range(0, count)
+                .mapToObj((i) -> newTestPost(i))
+                .map((post) -> postRepo.save(post))
+                .collect(Collectors.toList());
+    }
+
+    private Post newTestPost(int i)
+    {
+        LocalDateTime now = LocalDateTime.now();
+        Text text = Text.builder()
+                .value("Testing the sorting")
+                .build();
+        Post post = Post.builder()
+                .editedOn(now)
+                .publishedOn(now)
+                .sourceUrl("test-url" + i)
+                .title("The title of " + i)
+                .text(text)
+                .build();
+        return post;
+    }
 }

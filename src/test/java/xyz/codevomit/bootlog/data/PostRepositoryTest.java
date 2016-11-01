@@ -26,7 +26,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.*;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 import xyz.codevomit.bootlog.entity.Post;
 import xyz.codevomit.bootlog.entity.Text;
 import xyz.codevomit.bootlog.util.TestBuilder;
@@ -35,7 +35,7 @@ import xyz.codevomit.bootlog.util.TestBuilder;
  *
  * @author merka
  */
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(SpringRunner.class)
 @DataJpaTest
 @Slf4j
 public class PostRepositoryTest
@@ -59,7 +59,7 @@ public class PostRepositoryTest
     public void testInit()
     {
         assertNotNull(postRepository);
-        assertNotNull(testBuilder.getPostRepository());
+        assertNotNull(testBuilder.getPostRepo());
     }
     
     @Test
@@ -137,5 +137,23 @@ public class PostRepositoryTest
         Text retrievedText = savedAgain.getText();
         assertNotNull(retrievedText);
         log.info("Text found = {}", retrievedText);
+    }
+    
+    @Test
+    public void testFindAllByOrderByPublishedOnDesc()
+    {
+        int count = 10;
+        List<Post> posts = testBuilder.insertTestPosts(count);
+        
+        List<Post> ordered = postRepository.findAllByOrderByPublishedOnDesc();
+        
+        for(int i = 0; i < ordered.size() - 1; i++)
+        {
+            assertTrue(ordered.get(i).getPublishedOn().isAfter(
+                    ordered.get(i + 1).getPublishedOn()));
+        }
+        
+        // cleanup
+        postRepository.delete(posts);
     }
 }

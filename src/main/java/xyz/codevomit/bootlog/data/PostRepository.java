@@ -16,6 +16,7 @@
  */
 package xyz.codevomit.bootlog.data;
 
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import xyz.codevomit.bootlog.entity.Post;
 
@@ -26,4 +27,5 @@ import xyz.codevomit.bootlog.entity.Post;
 public interface PostRepository extends JpaRepository<Post, Long>
 {
     public Post findBySourceUrl(String sourceUrl);
+    public List<Post> findAllByOrderByPublishedOnDesc();
 }
