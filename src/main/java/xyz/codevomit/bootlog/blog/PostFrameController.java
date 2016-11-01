@@ -50,7 +50,7 @@ public class PostFrameController
     public List<Post> posts()
     {
         log.info("Retrieving posts");
-        List<Post> posts = new ArrayList<>(postRepository.findAll());
+        List<Post> posts = new ArrayList<>(postRepository.findAllByOrderByPublishedOnDesc());
         log.info("Found " + posts.size() + " elements");
         return posts;
     }
