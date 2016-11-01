@@ -21,7 +21,6 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.boot.SpringApplication;
 import xyz.codevomit.bootlog.entity.Post;
 import xyz.codevomit.bootlog.data.PostRepository;
 import xyz.codevomit.bootlog.service.PostService;
@@ -92,7 +91,7 @@ public class BootlogBootstrapper
                     .editedOn(conventionalDate)
                     .publishedOn(conventionalDate)
                     .sourceUrl(url)
-                    .title(url)
+                    .title("The Title of " + url)
                     .build();
             postService.createPostWithText(post, FileUtils.readFileToString(file));
         }

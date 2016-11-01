@@ -78,7 +78,7 @@
                         <h4 th:text="#{post-frame.sidebar.archive}">Archives</h4>
                         <ol id="postsIndex" class="list-unstyled">
                             <li th:each="post : ${posts}">
-                                <a th:href="@{'/blog/' + ${post.sourceUrl}}" th:text="${post.sourceUrl}"></a>
+                                <a th:href="@{'/blog/' + ${post.sourceUrl}}" th:text="${post.title}"></a>
                             </li>
                         </ol>
                     </div>
