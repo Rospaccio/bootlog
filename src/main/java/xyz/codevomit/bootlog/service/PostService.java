@@ -17,7 +17,8 @@
 package xyz.codevomit.bootlog.service;
 
 import java.util.List;
-import org.hibernate.Hibernate;
+import javax.transaction.Transactional;
+import org.apache.commons.lang.NotImplementedException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -47,7 +48,6 @@ public class PostService
 
     public Post createPostWithText(Post post, String textValue)
     {
-//        Post saved = postRepo.save(post);
         Text text = Text.builder()
                 .post(post)
                 .value(textValue)
@@ -75,13 +75,29 @@ public class PostService
         return oneLatest.get(0);
     }
     
-    public String getTextValueByPost(Post post)
+    public Text findTextByPost(Post post)
     {
         Text textObject = textRepository.findOneByPost(post);
         if(textObject == null)
         {
             throw new TextNotFoundException("No text associated for post with id " + post.getId());
         }
+        return textObject;
+    }
+    
+    public String getTextValueByPost(Post post)
+    {
+        Text textObject = findTextByPost(post);
         return textObject.getValue();
     }
+
+    @Transactional
+    void changePostText(Post savedWithWrongText, String newText)
+    {
+        Post retrievedPost = postRepo.findOne(savedWithWrongText.getId());
+        Text amendingText = findTextByPost(retrievedPost);
+        amendingText.setValue(newText);
+        textRepository.save(amendingText);
+    }   
+    
 }

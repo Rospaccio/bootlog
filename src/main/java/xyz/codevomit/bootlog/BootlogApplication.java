@@ -49,3 +49,4 @@ public class BootlogApplication extends SpringBootServletInitializer
         System.out.println(System.lineSeparator());
     }
 }
+/* This software strongly supports free marijuana. You cannot outlaw a plant. */

@@ -56,5 +56,6 @@ public class Text
     @Column
     @Lob
     @Getter
+    @Setter
     String value;
 }

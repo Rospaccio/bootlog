@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+/* Work hard, respect others, have fun. */
 package xyz.codevomit.bootlog.service;
 
 import java.time.LocalDateTime;
@@ -146,5 +147,31 @@ public class PostServiceTest
                 .text(text)
                 .build();
         return post;
+    }
+    
+    @Test
+    public void testChangePostText()
+    {
+        LocalDateTime now = LocalDateTime.now();
+        
+        Post postWithWrongText = Post.builder()
+                .publishedOn(now)
+                .sourceUrl("the-test-url")
+                .title("The splendid title")
+                .build();
+        Post savedWithWrongText = postService.createPostWithText(postWithWrongText, 
+                "\"Can't you write the method so that it behaves synchronously"
+                        + " or asynchronously based on a boolean parameter?\"");
+        String newText = "Remember that your manager is always right: the method "
+                + " **can** be both synchronous and asynchronous at the same "
+                + "time. If you can't implement it, it's your fault."; 
+        
+        postService.changePostText(savedWithWrongText, newText);
+        
+        String rightText = postService.getTextValueByPost(postWithWrongText);
+        assertEquals(newText, rightText);
+        
+        //cleanup
+        postRepo.delete(savedWithWrongText);
     }
 }
