@@ -22,8 +22,10 @@ import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -47,6 +49,9 @@ public class BootlogBootstrapperTest
     @Autowired
     PostService postService;
     
+    @Value("${posts.directory}")
+    String postTestDirectory;
+    
     private TestBuilder testBuilder;
     
     public BootlogBootstrapperTest()
@@ -65,10 +70,11 @@ public class BootlogBootstrapperTest
     @Test
     public void testBootstrapDatabase()
     {
+        postRepo.deleteAll();
         assertEquals(0, postRepo.count());
         assertNotNull(postRepo);
         BootlogBootstrapper bootstrapper = new BootlogBootstrapper(postRepo,
-                postService, "D:/temp/posts");
+                postService, postTestDirectory);
         
          bootstrapper.bootstrapDatabase();
          
@@ -89,6 +95,7 @@ public class BootlogBootstrapperTest
     }
     
     @Test
+    @Ignore
     public void testReadPostsFromJson() throws JsonProcessingException
     {
         List<Post> created = testBuilder.createAndSaveTestPosts(4);
