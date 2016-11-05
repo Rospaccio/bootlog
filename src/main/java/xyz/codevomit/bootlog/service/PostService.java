@@ -90,9 +90,9 @@ public class PostService
         Text textObject = findTextByPost(post);
         return textObject.getValue();
     }
-
+    
     @Transactional
-    void changePostText(Post savedWithWrongText, String newText)
+    public void changePostText(Post savedWithWrongText, String newText)
     {
         Post retrievedPost = postRepo.findOne(savedWithWrongText.getId());
         Text amendingText = findTextByPost(retrievedPost);

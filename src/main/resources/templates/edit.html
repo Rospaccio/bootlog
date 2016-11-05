@@ -24,24 +24,56 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
         <link rel="apple-touch-icon" href="apple-touch-icon.png" />
 
-        <link rel="stylesheet" href="css/bootstrap.min.css" />
+        <link rel="stylesheet" href="../css/bootstrap.min.css" />
         <style>            
             body {
                 padding-top: 50px;
                 padding-bottom: 20px;
             }
         </style>
-        <link rel="stylesheet" href="css/bootstrap-theme.min.css" />
-        <link rel="stylesheet"  href="css/main.css" />
+        <link rel="stylesheet" href="../css/bootstrap-theme.min.css" />
+        <link rel="stylesheet"  href="../css/main.css" />
 
-        <link rel="stylesheet" href="js/vendor/highlight/styles/vs.css" />
+        <link rel="stylesheet" href="../js/vendor/highlight/styles/vs.css" />
 
-        <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
-        <script src="js/vendor/highlight/highlight.pack.js" />
+        <script src="../js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
+        <script src="../js/vendor/highlight/highlight.pack.js" />
     </head>
     <body>
         <div class="container">
-            
+            <h1 th:text="#{edit.page.title}">Edit a post</h1>
+            <form th:action="@{/edit/{postId}(postId=${post.id})}"
+                  method="post" th:object="${post}">
+                
+                <div class="form-group">
+                    <label for="titleInput" th:text="#{edit.form.title}"></label>
+                    <input class="form-control" type="text" th:field="*{title}"></input>
+                </div>
+                
+                <div class="form-group">
+                    <label for="postText" th:text="#{edit.form.text}"></label>
+                    <textarea id="postText"
+                        th:field="*{text.value}"
+                        class="form-control"
+                        rows="22">
+                    </textarea>
+                </div>
+                
+                <div class="form-group">
+                    <input type="submit" th:value="#{edit.submit.text}"
+                           class="btn btn-primary"></input>
+                </div>
+            </form>
         </div>
+        
+        <script>
+    // <!--
+    window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')
+    // -->
+        </script>
+
+        <script src="../js/vendor/bootstrap.min.js"></script>
+
+        <script src="../js/bootlog.js"></script>
     </body>
 </html>

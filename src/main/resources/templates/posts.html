@@ -64,8 +64,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                 <form th:action="@{/posts}" method="post">
                                     <input type="hidden" th:value="${post.id}" name="postId"></input> 
                                     <input type="submit" th:value="#{posts.label.delete}"
-                                           class="btn btn-danger"></input>
+                                           class="btn btn-sm btn-danger"></input>
                                 </form>
+                                <a class="btn btn-sm btn-success" th:text="#{posts.label.edit}"
+                                   th:href="@{/edit/{postId}(postId=${post.id})}"></a>
                             </td>
                         </tr>
                     </tbody>
