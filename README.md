@@ -1,6 +1,6 @@
 # Bootlog - another attempt to build my own blog
 
-![build-status](https://travis-ci.org/Rospaccio/bootlog.svg?branch=master)
+[![build-status](https://travis-ci.org/Rospaccio/bootlog.svg?branch=master)](https://travis-ci.org/Rospaccio/bootlog)
 
 Bootlog is a blog application based on Spring Boot.
 
