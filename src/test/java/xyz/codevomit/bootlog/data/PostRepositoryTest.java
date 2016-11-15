@@ -147,15 +147,26 @@ public class PostRepositoryTest
         
         List<Post> ordered = postRepository.findAllByOrderByPublishedOnDesc();
         
+        assertOrdered(ordered);
+        assertEquals(posts.get(count - 1).getId(), ordered.get(0).getId());
+
+        Post additionalPost = testBuilder.newTestPost(11);
+        
+        ordered = postRepository.findAllByOrderByPublishedOnDesc();
+        
+        assertOrdered(ordered);
+        
+        // cleanup
+        postRepository.delete(posts);
+        postRepository.delete(additionalPost);
+    }
+    
+    private void assertOrdered(List<Post> ordered)
+    {
         for(int i = 0; i < ordered.size() - 1; i++)
         {
             assertTrue(ordered.get(i).getPublishedOn().isAfter(
                     ordered.get(i + 1).getPublishedOn()));
         }
-        
-        assertEquals(posts.get(count - 1).getId(), ordered.get(0).getId());
-        
-        // cleanup
-        postRepository.delete(posts);
     }
 }

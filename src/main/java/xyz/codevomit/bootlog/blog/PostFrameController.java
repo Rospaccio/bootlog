@@ -65,6 +65,10 @@ public class PostFrameController
     public List<Post> posts()
     {
         List<Post> posts = new ArrayList<>(postRepository.findAllByOrderByPublishedOnDesc());
+        if(log.isInfoEnabled())
+        {
+            posts.stream().forEach((post) -> log.info("{} \t\t->\t\t {}", post.getSourceUrl(), post.getPublishedOn()));
+        }
         return posts;
     }
     
