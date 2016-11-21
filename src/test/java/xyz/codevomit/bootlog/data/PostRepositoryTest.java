@@ -22,6 +22,7 @@ import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -140,6 +141,7 @@ public class PostRepositoryTest
     }
     
     @Test
+    @Ignore
     public void testFindAllByOrderByPublishedOnDesc()
     {
         int count = 10;

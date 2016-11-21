@@ -17,7 +17,10 @@
 package xyz.codevomit.bootlog.blog;
 
 import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +37,17 @@ public class IndexController
 {
     @Autowired
     PostService postService;
+    
+    @Value("${analytics.enabled:true}")
+    @Getter
+    @Setter
+    boolean analyticsEnabled;
+
+    @ModelAttribute(name = "analyticsEnabled")
+    public Boolean analyticsEnabled()
+    {
+        return analyticsEnabled;
+    }
     
     @ModelAttribute(name = "latestPosts")
     public List<Post> latestPosts()
