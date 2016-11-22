@@ -94,7 +94,7 @@ public class TestBuilder
                 .build();
         Post post = Post.builder()
                 .editedOn(now)
-                .publishedOn(now.plusMinutes(1))
+                .publishedOn(now.plusMinutes(i))
                 .sourceUrl("test-url" + i)
                 .title("The title of " + i)
                 .text(text)

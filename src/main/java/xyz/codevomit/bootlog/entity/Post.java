@@ -56,7 +56,7 @@ public class Post
     @Column
     String title;
     
-    @Column
+    @Column(columnDefinition = "TIMESTAMP NULL")
     LocalDateTime publishedOn;
     
     @LastModifiedDate

@@ -141,7 +141,6 @@ public class PostRepositoryTest
     }
     
     @Test
-    @Ignore
     public void testFindAllByOrderByPublishedOnDesc()
     {
         int count = 10;
@@ -149,7 +148,10 @@ public class PostRepositoryTest
         
         List<Post> ordered = postRepository.findAllByOrderByPublishedOnDesc();
         
+        ordered.stream().forEach((post) -> log.info("{} -> {}", post.getId(), post.getPublishedOn()));
         assertOrdered(ordered);
+        // test entities are inserted by increasing publishedOn, so the last one
+        // of the ordered list must be equals to the first of initial list.
         assertEquals(posts.get(count - 1).getId(), ordered.get(0).getId());
 
         Post additionalPost = testBuilder.newTestPost(11);
