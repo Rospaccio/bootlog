@@ -108,7 +108,7 @@ public class EditControllerTest
                 .param("title", changedTitle)
                 .param("text.value", changedText))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/posts"));
+                .andExpect(redirectedUrl("posts"));
         
         Post shouldHaveNewTitle = postRepo.findOne(post.getId());
         String shouldBeChanged = postService.getTextValueByPost(post);

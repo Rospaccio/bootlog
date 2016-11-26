@@ -66,6 +66,6 @@ public class EditController
         postRepo.save(postToEdit);
         postService.changePostText(postToEdit, text);
         
-        return new RedirectView("/posts");
+        return new RedirectView("posts");
     }
 }

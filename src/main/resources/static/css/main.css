@@ -4,10 +4,12 @@
    Author's custom styles
    ========================================================================== */
 
-
-
-
-
+.post-text-container p 
+{
+    text-align: justify;
+    font-family: Georgia;
+    font-size: 18px;
+}
 
 
 
