@@ -20,17 +20,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import xyz.codevomit.bootlog.data.PostRepository;
 import xyz.codevomit.bootlog.entity.Post;
 import xyz.codevomit.bootlog.entity.Text;
-import xyz.codevomit.bootlog.service.PostService;
 
 /**
  *
@@ -41,8 +38,8 @@ public class TestBuilder
 {
     @Getter
     PostRepository postRepo;
-    @Autowired
-    PostService postService;
+//    @Autowired
+//    PostService postService;
 
     @Getter
     final LocalDateTime baseDateTime = LocalDateTime.of(2016, 9, 1, 12, 12);

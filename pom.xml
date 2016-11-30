@@ -36,13 +36,19 @@
   
         <!-- Uncomment the following dependency to build a deployable war
         P.S. Do not forget to set packaging=war        -->
-<!--        <dependency>
+        <!--        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
             <version>1.4.1.RELEASE</version>
         </dependency>-->
        
         <!-- Additional dependencies -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>2.8.5</version>
+        </dependency>
+
         <dependency>
             <groupId>com.atlassian.commonmark</groupId>
             <artifactId>commonmark</artifactId>
@@ -113,7 +119,7 @@
             <version>1.4.192</version>
             <scope>runtime</scope>
         </dependency>
-<!--        <dependency>
+        <!--        <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>9.4.1211</version>

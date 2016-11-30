@@ -18,6 +18,7 @@ package xyz.codevomit.bootlog.data;
 
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import xyz.codevomit.bootlog.entity.Post;
 
 /**
@@ -28,4 +29,7 @@ public interface PostRepository extends JpaRepository<Post, Long>
 {
     public Post findBySourceUrl(String sourceUrl);
     public List<Post> findAllByOrderByPublishedOnDesc();
+    
+    @Query("select p from Post p JOIN FETCH p.text")
+    public List<Post> findAllForExport();
 }
