@@ -18,6 +18,7 @@ package xyz.codevomit.bootlog.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import java.util.List;
 import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -39,17 +40,13 @@ public class BackupService
         this.postRepository = postRepository;                
     }
     
-//    @Transactional(Transactional.TxType.REQUIRES_NEW)
     public String backupPostsToJSON() throws JsonProcessingException
     {
         List<Post> allPosts = postRepository.findAllForExport();
-        for(Post post : allPosts)
-        {
-            Hibernate.initialize(post.getText());
-            log.debug(post.getText().getValue());
-        }
+
         ObjectMapper mapper = new ObjectMapper();
         mapper.findAndRegisterModules();
+        mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
         return mapper.writeValueAsString(allPosts);
     }
 }

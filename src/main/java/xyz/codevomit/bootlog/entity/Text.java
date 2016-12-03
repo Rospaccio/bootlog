@@ -16,6 +16,7 @@
  */
 package xyz.codevomit.bootlog.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -49,13 +50,21 @@ public class Text
     Long id;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @Getter @Setter
-//    @PrimaryKeyJoinColumn(name="owner_id", referencedColumnName = "id")
+    @Setter
+    @JsonIgnore
     private Post post;
 
     @Column
     @Lob
     @Getter
     @Setter
-    String value;
+    String content;
+
+    @JsonIgnore
+    public Post getPost()
+    {
+        return post;
+    }
+    
+    
 }

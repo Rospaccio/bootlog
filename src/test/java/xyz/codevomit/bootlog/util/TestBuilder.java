@@ -87,7 +87,7 @@ public class TestBuilder
     {
         LocalDateTime now = LocalDateTime.of(2016, 11, 13, 12, 12);
         Text text = Text.builder()
-                .value("Testing the sorting")
+                .content("Testing the sorting")
                 .build();
         Post post = Post.builder()
                 .editedOn(now)

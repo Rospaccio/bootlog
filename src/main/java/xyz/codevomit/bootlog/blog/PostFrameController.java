@@ -96,7 +96,7 @@ public class PostFrameController
         
         Post post = postRepository.findBySourceUrl(postId);        
         String markdownContent = MarkdownUtils.renderMarkdownTextToHtml(
-                post.getText().getValue());
+                post.getText().getContent());
         
         log.debug("Parsed post = \n" + markdownContent);
         

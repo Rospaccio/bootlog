@@ -32,7 +32,6 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import org.springframework.test.web.servlet.MvcResult;
 import xyz.codevomit.bootlog.data.PostRepository;
 import xyz.codevomit.bootlog.entity.Post;
-import xyz.codevomit.bootlog.entity.Text;
 import xyz.codevomit.bootlog.service.PostService;
 
 /**
@@ -79,7 +78,7 @@ public class EditControllerTest
         Post editingPost = (Post)result.getModelAndView().getModel().get("post");
         assertEquals(id, editingPost.getId());
         
-        String textValue = editingPost.getText().getValue();
+        String textValue = editingPost.getText().getContent();
         assertNotNull(textValue);
         
         // cleanup
@@ -106,9 +105,9 @@ public class EditControllerTest
         
         mockMvc.perform(post("/edit/" + post.getId()).with(csrf())
                 .param("title", changedTitle)
-                .param("text.value", changedText))
+                .param("text.content", changedText))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("posts"));
+                .andExpect(redirectedUrl("/posts"));
         
         Post shouldHaveNewTitle = postRepo.findOne(post.getId());
         String shouldBeChanged = postService.getTextValueByPost(post);

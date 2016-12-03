@@ -65,8 +65,8 @@ public class PostServiceTest
         assertNotNull(created);
         assertEquals(title, created.getTitle());
         assertEquals(url, created.getSourceUrl());
-        assertNotNull(created.getText().getValue());
-        String text = created.getText().getValue();
+        assertNotNull(created.getText().getContent());
+        String text = created.getText().getContent();
         assertEquals(MarkdownUtilsTest.MARKDOWN_SAMPLE, text);
     }
 
@@ -137,7 +137,7 @@ public class PostServiceTest
     {
         LocalDateTime now = LocalDateTime.now();
         Text text = Text.builder()
-                .value("Testing the sorting")
+                .content("Testing the sorting")
                 .build();
         Post post = Post.builder()
                 .editedOn(now)

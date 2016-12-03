@@ -16,60 +16,51 @@
  */
 package xyz.codevomit.bootlog.blog;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
-import xyz.codevomit.bootlog.data.PostRepository;
 import xyz.codevomit.bootlog.entity.Post;
-import xyz.codevomit.bootlog.entity.Text;
-import xyz.codevomit.bootlog.service.PostService;
+import xyz.codevomit.bootlog.service.BackupService;
 
 /**
  *
  * @author merka
  */
 @Controller
-@RequestMapping("/edit")
+@RequestMapping("/backup")
 @Slf4j
-public class EditController
+public class BackupController
 {
     @Autowired
-    PostService postService;
+    BackupService backupService;    
     
-    @Autowired
-    PostRepository postRepo;
-    
-    @Value("${server.contextPath:}")
-    String contextPath;
-    
-    @GetMapping("/{id}")
-    public String edit(@PathVariable(value = "id") Long id,
-            Model model)
+    @GetMapping(path = {""}) 
+    public String land()
     {
-        Post postToEdit = postRepo.findOne(id);
-        postToEdit.getText().getContent();
-        model.addAttribute("post", postToEdit);
-        return "edit";
+        return "backup";
     }
     
-    @PostMapping("/{id}")
-    public RedirectView post(@PathVariable("id") Long id,
-            @RequestParam(name = "title", required = false) String title,
-            @RequestParam(name = "text.content", required = true) String text)
+    @PostMapping(path = {"export", "/export"})
+    @ResponseBody
+    public void export(HttpServletResponse response) throws JsonProcessingException, IOException
     {
-        Post postToEdit = postRepo.findOne(id);
-        postToEdit.setTitle(title);
-        postRepo.save(postToEdit);
-        postService.changePostText(postToEdit, text);
-        
-        return new RedirectView(contextPath + "/posts");
+        String serializedContent = backupService.backupPostsToJSON();
+        response.setHeader("Content-Disposition", "attachment; filename=bootlog-export.json");
+        FileCopyUtils.copy(new ByteArrayInputStream(serializedContent.getBytes()), response.getOutputStream());
     }
 }

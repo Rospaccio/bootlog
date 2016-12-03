@@ -130,7 +130,7 @@ public class PostRepositoryTest
         assertNotNull(saved);
         Text text = Text.builder()
                 .post(saved)
-                .value("TEST").build();
+                .content("TEST").build();
         saved.setText(text);
         Post savedAgain = postRepository.save(saved);
         assertNotNull(savedAgain);

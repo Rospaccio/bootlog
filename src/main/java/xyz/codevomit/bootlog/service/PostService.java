@@ -49,7 +49,7 @@ public class PostService
     {
         Text text = Text.builder()
                 .post(post)
-                .value(textValue)
+                .content(textValue)
                 .build();
         text.setPost(post);
         post.setText(text);
@@ -87,7 +87,7 @@ public class PostService
     public String getTextValueByPost(Post post)
     {
         Text textObject = findTextByPost(post);
-        return textObject.getValue();
+        return textObject.getContent();
     }
     
     @Transactional
@@ -95,7 +95,7 @@ public class PostService
     {
         Post retrievedPost = postRepo.findOne(savedWithWrongText.getId());
         Text amendingText = findTextByPost(retrievedPost);
-        amendingText.setValue(newText);
+        amendingText.setContent(newText);
         textRepository.save(amendingText);
     }   
     

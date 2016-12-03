@@ -29,6 +29,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 import xyz.codevomit.bootlog.data.PostRepository;
 import xyz.codevomit.bootlog.data.TextRepository;
+import xyz.codevomit.bootlog.service.BackupService;
 import xyz.codevomit.bootlog.service.PostService;
 
 /**
@@ -94,6 +95,13 @@ public class BootlogConfiguration extends WebMvcConfigurerAdapter
             TextRepository textRepository)
     {
         return new PostService(postRepository, textRepository);
+    }
+    
+    @Bean
+    @Autowired
+    public BackupService backupService(PostRepository postRepository)
+    {
+        return new BackupService(postRepository);
     }
     
     @Bean
