@@ -41,7 +41,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     </head>
     <body>
         <div class="container">
-            <div class="panel panel-success">
+            <div class="alert alert-success" th:if="${message}" th:text="${message}">
+                
+            </div>
+            <div class="panel panel-primary">
                 <div class="panel-heading" th:text="#{backup.panel.header}">
                     Export to JSON
                 </div>
@@ -49,7 +52,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     <p th:text="#{backup.panel.body}"></p>
                     <form th:action="@{/backup/export}" method="post">
                         <input type="submit"
-                               class="btn btn-lg btn-success"
+                               class="btn btn-lg btn-primary"
                                th:value="#{backup.panel.button.value}"></input>
                     </form>
                 </div>
@@ -61,12 +64,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 </div>
                 <div class="panel-body">
                     <p th:text="#{backup.import.panel.body}"></p>
-                    <form th:action="@{/backup/import}" method="post">
+                    <form th:action="@{/backup/import}" method="post" enctype="multipart/form-data">
                         <div class="form-group">
-                            <input type="file" name="importedJson"></input>
+                            <input type="file" name="jsonContent"></input>
                         </div>
                         <div class="form-group">
-                            <input class="btn btn-lg btn-danger" 
+                            <input type="submit" class="btn btn-lg btn-danger" 
                                 th:value="#{backup.import.button.value}">
                             </input>
                         </div>

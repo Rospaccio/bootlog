@@ -16,11 +16,7 @@
  */
 package xyz.codevomit.bootlog.blog;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.ReferenceType;
 import java.io.InputStream;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
@@ -31,74 +27,58 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import xyz.codevomit.bootlog.data.PostRepository;
-import xyz.codevomit.bootlog.entity.Post;
-import xyz.codevomit.bootlog.service.PostService;
 
 /**
  *
  * @author merka
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(properties = "test.db.bootstrap=true")
+@SpringBootTest(properties = "test.db.bootstrap=false")
 @AutoConfigureMockMvc
 @Slf4j
-public class BackupControllerTest
+public class BackupControllerImportTest
 {
-
-    @Autowired
+    @Autowired 
     MockMvc mockMvc;
-
-    @Autowired
-    PostService postService;
-
+    
     @Autowired
     PostRepository postRepo;
-
-    public BackupControllerTest()
+            
+    public BackupControllerImportTest()
     {
     }
-
-    @Test
-    public void testLandwithoutAuth() throws Exception
-    {
-        mockMvc.perform(get("/backup")).andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrlPattern("**/login"));
-    }
-
+    
+    
     @Test
     @WithMockUser(username = "merka", password = "merka")
-    public void testLand() throws Exception
+    public void testImport() throws Exception
     {
-        mockMvc.perform(get("/backup")).andExpect(status().isOk());
-    }
+        assertTrue(postRepo.count() == 0);
 
-    @Test
-    @WithMockUser(username = "merka", password = "merka")
-    public void testExport() throws Exception
-    {
-        MvcResult mvcResult = mockMvc.perform(post("/backup/export").with(csrf()))
-                .andExpect(status().isOk())
-                .andReturn();
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.findAndRegisterModules();
+        InputStream stream = getClass().getClassLoader().getResourceAsStream("json/bootlog-export.json");
+        byte[] jsonContent = IOUtils.toByteArray(stream);
+        MockMultipartFile part = new MockMultipartFile("jsonContent",
+                "bootlog-export.json", "octet/stream", jsonContent);
 
-        log.info("Here's the response content: {}", mvcResult.getResponse()
-                .getContentAsString());
+        mockMvc.perform(fileUpload("/backup/import").file(part).with(csrf())) // TODO set multipart content and input file
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("/backup*"))
+                .andExpect(flash().attributeExists("message"));
 
-        List<Post> deserializedPosts = mapper.readValue(mvcResult.getResponse()
-                .getContentAsString(), new TypeReference<List<Post>>()
-        {
-        });
+        assertEquals(5, postRepo.count());
 
-        assertFalse(deserializedPosts.isEmpty());
+        // cleanup
+        postRepo.deleteAll();
     }
 }
