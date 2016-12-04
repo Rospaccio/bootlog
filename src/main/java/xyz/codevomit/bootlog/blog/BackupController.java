@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -54,6 +55,9 @@ import xyz.codevomit.bootlog.service.PostService;
 @Slf4j
 public class BackupController
 {
+    @Value("${server.contextPath:}")
+    String contextPath;
+    
     @Autowired
     BackupService backupService;    
     
@@ -96,6 +100,7 @@ public class BackupController
                     + e.getMessage();
             redirectAttributes.addFlashAttribute("message", errorMessage);
         }
-        return new RedirectView("/backup");
+        
+        return new RedirectView(contextPath + "/backup");
     }
 }
