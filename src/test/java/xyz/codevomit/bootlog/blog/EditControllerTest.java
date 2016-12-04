@@ -110,7 +110,7 @@ public class EditControllerTest
                 .andExpect(redirectedUrl("/posts"));
         
         Post shouldHaveNewTitle = postRepo.findOne(post.getId());
-        String shouldBeChanged = postService.getTextValueByPost(post);
+        String shouldBeChanged = postService.getTextContentByPost(post);
         assertEquals(changedTitle, shouldHaveNewTitle.getTitle());
         assertEquals(changedText, shouldBeChanged);
         

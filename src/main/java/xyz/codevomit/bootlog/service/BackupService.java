@@ -17,8 +17,10 @@
 package xyz.codevomit.bootlog.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import java.io.IOException;
 import java.util.List;
 import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -33,13 +35,14 @@ import xyz.codevomit.bootlog.entity.Post;
 @Slf4j
 public class BackupService
 {
+
     PostRepository postRepository;
-    
+
     public BackupService(PostRepository postRepository)
     {
-        this.postRepository = postRepository;                
+        this.postRepository = postRepository;
     }
-    
+
     public String backupPostsToJSON() throws JsonProcessingException
     {
         List<Post> allPosts = postRepository.findAllForExport();
@@ -48,5 +51,22 @@ public class BackupService
         mapper.findAndRegisterModules();
         mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
         return mapper.writeValueAsString(allPosts);
+    }
+
+    public void importPostContent(String jsonToImport) throws IOException
+    {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.findAndRegisterModules();
+
+        List<Post> postsToImport = mapper.readValue(jsonToImport, new TypeReference<List<Post>>()
+        {
+        });
+        postsToImport.stream().forEach(post -> 
+                {
+                    post.setId(null);
+                    post.getText().setId(null);
+                    post.getText().setPost(post);
+        });
+        postRepository.save(postsToImport);
     }
 }

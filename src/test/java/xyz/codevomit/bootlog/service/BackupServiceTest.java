@@ -20,8 +20,11 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.ReferenceType;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -30,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import xyz.codevomit.bootlog.data.PostRepository;
+import xyz.codevomit.bootlog.data.TextRepository;
 import xyz.codevomit.bootlog.entity.Post;
 import xyz.codevomit.bootlog.util.TestBuilder;
 
@@ -44,6 +48,12 @@ public class BackupServiceTest
 {
     @Autowired
     PostRepository postRepo;
+    
+    @Autowired
+    TextRepository textRepo;
+    
+    @Autowired
+    PostService postService;
     
     TestBuilder testBuilder;
     
@@ -79,4 +89,27 @@ public class BackupServiceTest
         postRepo.delete(testPosts);
     }
     
+    @Test
+    public void testImportPostContent() throws IOException
+    {
+        assertEquals(0, postRepo.count());
+        InputStream jsonStream = getClass().getClassLoader().getResourceAsStream("json/bootlog-export.json");
+        String json = IOUtils.toString(jsonStream);
+        BackupService backupService = new BackupService(postRepo);
+        
+        backupService.importPostContent(json);
+        
+        List<Post> imported = postRepo.findAll();
+        assertFalse(imported.isEmpty());
+        assertEquals(5, imported.size());
+        Post firstPost = imported.get(0);
+        assertNotNull(firstPost.getPublishedOn());
+        assertNotNull(firstPost.getSourceUrl());
+               
+        String firstContent = postService.getTextContentByPost(firstPost);
+        assertTrue(StringUtils.isNotBlank(firstContent));
+        
+        //cleanup
+        postRepo.deleteAll();
+    }
 }

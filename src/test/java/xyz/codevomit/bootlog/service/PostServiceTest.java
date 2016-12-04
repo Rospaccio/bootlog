@@ -86,7 +86,7 @@ public class PostServiceTest
         assertNotNull(found);
         assertNotNull(found.getText());
         
-        String textValue = postService.getTextValueByPost(saved);
+        String textValue = postService.getTextContentByPost(saved);
         
         assertNotNull(textValue);
         assertEquals(MarkdownUtilsTest.MARKDOWN_SAMPLE, textValue);
@@ -168,7 +168,7 @@ public class PostServiceTest
         
         postService.changePostText(savedWithWrongText, newText);
         
-        String rightText = postService.getTextValueByPost(postWithWrongText);
+        String rightText = postService.getTextContentByPost(postWithWrongText);
         assertEquals(newText, rightText);
         
         //cleanup

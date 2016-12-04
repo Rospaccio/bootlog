@@ -105,7 +105,7 @@ public class PublishControllerTest
         assertEquals(LocalDateTime.of(2016, 9, 24, 12, 12), created.getPublishedOn());
         Post foundAgain = postRepo.findOne(created.getId());
         assertNotNull(foundAgain);
-        String text = postService.getTextValueByPost(foundAgain); // created.getText().getValue();
+        String text = postService.getTextContentByPost(foundAgain); // created.getText().getValue();
         assertEquals(MARKDOWN_FRAGMENT, text);
         
         // cleanup

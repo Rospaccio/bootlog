@@ -47,6 +47,7 @@ public class Text
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Getter
+    @Setter
     Long id;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

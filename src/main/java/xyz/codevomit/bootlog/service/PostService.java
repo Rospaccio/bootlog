@@ -84,7 +84,7 @@ public class PostService
         return textObject;
     }
     
-    public String getTextValueByPost(Post post)
+    public String getTextContentByPost(Post post)
     {
         Text textObject = findTextByPost(post);
         return textObject.getContent();

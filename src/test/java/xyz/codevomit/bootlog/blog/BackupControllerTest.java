@@ -88,4 +88,10 @@ public class BackupControllerTest
         
         assertFalse(deserializedPosts.isEmpty());
     }
+    
+    @Test
+    public void testRecover()
+    {
+    
+    }
 }
