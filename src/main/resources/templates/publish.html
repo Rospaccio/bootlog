@@ -41,7 +41,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     </head>
     <body>
         <div class="container">
-            <h1>Publish a new post</h1>
+            <h1 th:text="#{publish.content.title}">Publish a new post</h1>
             <div>
                 <form th:action="@{/publish}" enctype="multipart/form-data" method="post">
                     <div></div>
@@ -61,7 +61,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         <label for="postPublishDate" th:text="#{publish.form.label.publishDate}">Publish Date</label>
                         <input type="datetime-local" class="form-control" id="postPublishDate"
                                th:placeholder="#{publish.form.label.publishDate}"
-                               name="publishDate"></input>
+                               name="publishDate" th:value="${defaultPublishDate}"></input>
                     </div> 
                     <div class="form-group">
                         <div>

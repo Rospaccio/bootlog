@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -42,6 +43,14 @@ public class PublishController
 {
     @Autowired
     PostService postService;
+    
+    @ModelAttribute(name = "defaultPublishDate")
+    public LocalDateTime defaultPublishDate()
+    {
+        return LocalDateTime.now()
+                .withSecond(0)
+                .withNano(0);
+    }
     
     @RequestMapping(path = {""}, method = RequestMethod.GET)
     public String publish()

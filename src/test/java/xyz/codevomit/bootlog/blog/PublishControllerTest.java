@@ -25,11 +25,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
+import org.springframework.test.web.servlet.MvcResult;
 import xyz.codevomit.bootlog.data.PostRepository;
 import xyz.codevomit.bootlog.entity.Post;
 import xyz.codevomit.bootlog.service.PostService;
@@ -71,6 +73,20 @@ public class PublishControllerTest
     {
         mockMvc.perform(get("/publish")).andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlPattern("**/login"));
+    }
+    
+    @Test
+    @WithMockUser(username = "merka", password = "merka")
+    public void testLandWithDefaultDate() throws Exception
+    {
+        MvcResult result = mockMvc.perform(get("/publish"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("defaultPublishDate"))
+                .andReturn();
+        LocalDateTime date = (LocalDateTime)result.getModelAndView()
+                .getModel().get("defaultPublishDate");
+        assertEquals(0, date.getSecond());
+        assertEquals(0, date.getNano());
     }
     
     @Test

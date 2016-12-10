@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -31,6 +32,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
  */
 @Configuration
 @EnableWebSecurity
+@Order
 //@ConditionalOnProperty(name = "security.enabled", matchIfMissing = true, havingValue = "true")
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter
 {
@@ -45,8 +47,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
     {
         http.authorizeRequests()
                 .antMatchers("/").permitAll()
-//                .antMatchers("/publish").permitAll()
-//                .antMatchers("/posts").permitAll()
                 .antMatchers("/favicon.ico").permitAll()
                 .antMatchers("/css/**").permitAll()
                 .antMatchers("/js/**").permitAll()
