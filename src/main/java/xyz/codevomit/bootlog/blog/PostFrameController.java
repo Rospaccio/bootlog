@@ -91,14 +91,12 @@ public class PostFrameController
     @RequestMapping("/{postId}")
     public String showPost(@PathVariable(value = "postId")String postId,
         Model model) throws IOException
-    {
-        log.info("Request post with id = " + postId);
-        
-        Post post = postRepository.findBySourceUrl(postId);        
+    {        
+        Post post = postRepository.findBySourceUrl(postId);
+        model.addAttribute("postTitle", post.getTitle());
+        model.addAttribute("publishDate", post.getPublishedOn() ); 
         String markdownContent = MarkdownUtils.renderMarkdownTextToHtml(
                 post.getText().getContent());
-        
-        log.debug("Parsed post = \n" + markdownContent);
         
         model.addAttribute(MARKDOWN_CONTENT, markdownContent);
         model.addAttribute("postId", postId);        

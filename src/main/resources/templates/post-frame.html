@@ -65,6 +65,14 @@
 
             <div class="container">
                 <div id="postColumn" class="col-md-9 post-text-container">
+                    <div id="postTitleBox">
+                        <h1 class="post-title" th:text="${postTitle}"></h1>
+                    </div>
+                    <div id="publishDateBox" class="publish-date-box">
+                        <span class="publish-date-label">Published on: </span>
+                        <span class="publish-date"  th:text="${#temporals.format(publishDate,'dd/MM/yyyy')}"></span>
+                        <hr />
+                    </div>
                     <div th:utext="${markdownContent}">
                     </div>
                     <div id="disqus_thread"></div>

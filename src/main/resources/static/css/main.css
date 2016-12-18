@@ -11,7 +11,23 @@
     font-size: 18px;
 }
 
+.post-title
+{
+    font-weight: bold;
+    color: #1e5d17;
+}
 
+.publish-date-label
+{
+    font-family: Georgia;
+}
+
+.publish-date
+{
+    font-family: Georgia;
+    font-weight: bold;
+    color: #244f73;
+}
 
 
 
