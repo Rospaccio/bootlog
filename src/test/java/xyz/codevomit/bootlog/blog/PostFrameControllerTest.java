@@ -28,6 +28,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -42,10 +43,15 @@ import xyz.codevomit.bootlog.service.PostService;
  * @author merka
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(properties = {"spring.datasource.url=jdbc:h2:mem:testdb;DB_CLOSE_ON_EXIT=FALSE"})
+@SpringBootTest(properties =
+{
+    "spring.datasource.url=jdbc:h2:mem:testdb;DB_CLOSE_ON_EXIT=FALSE",
+    "test.db.bootstrap=true"
+})
 @AutoConfigureMockMvc
 public class PostFrameControllerTest
 {
+
     @Autowired
     MockMvc mockMvc;
     @Autowired
@@ -54,7 +60,7 @@ public class PostFrameControllerTest
     PostService postService;
     @Autowired
     PostFrameController controller;
-    
+
     public PostFrameControllerTest()
     {
     }
@@ -70,28 +76,57 @@ public class PostFrameControllerTest
                 .title("Blah title")
                 .build();
         postRepo.save(latestPost);
-                
+
         mockMvc.perform(get("/blog")).andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("blog/blah"));
-        
+
         // cleanup
         postRepo.delete(latestPost);
     }
-    
+
     @Test
     @Ignore
     public void testShowPostNotPresent() throws Exception
     {
-        if(postRepo.count() > 0)
+        if (postRepo.count() > 0)
         {
             postRepo.deleteAll();
         }
         assertTrue(postRepo.count() == 0);
         MvcResult result = mockMvc.perform(get("/blog")).andExpect(status().is2xxSuccessful())
+                .andExpect(model().attribute("analyticsEnabled", true))
                 .andReturn();
         assertNull(result.getModelAndView().getModel().get(PostFrameController.MARKDOWN_CONTENT));
     }
+
+    @Test
+    @WithMockUser(username = "merka", password = "merka")
+    @Ignore
+    public void testAnalyticsDisabledWithUserLogged() throws Exception
+    {
+        String url = firstValidUrl();
+
+        mockMvc.perform(get("/blog/" + url)).andExpect(status().isOk())
+                .andExpect(model().attribute("analyticsEnabled", false));
+    }
     
+    private String firstValidUrl()
+    {
+        return postService.findLatestPost().getSourceUrl();
+    }
+
+    @Test
+    public void testAnalyticsEnabledWithoutUserLogged() throws Exception
+    {
+        MvcResult result = mockMvc.perform(get("/blog/" + firstValidUrl()))
+                .andExpect(status().isOk())
+                .andReturn();
+                
+        Object analyticsEnabled = result.getModelAndView().getModel().get("analyticsEnabled");
+        assertNotNull(analyticsEnabled);
+        assertEquals(true, analyticsEnabled);
+    }
+
 //    @Test
 //    public void testShowPostAnalyticsNotEnabled() throws Exception
 //    {

@@ -33,6 +33,7 @@ import xyz.codevomit.bootlog.entity.Post;
 import xyz.codevomit.bootlog.data.PostRepository;
 import xyz.codevomit.bootlog.markdown.MarkdownUtils;
 import xyz.codevomit.bootlog.service.PostService;
+import xyz.codevomit.bootlog.service.UserService;
 
 /**
  *
@@ -47,6 +48,9 @@ public class PostFrameController
     PostRepository postRepository;
     
     @Autowired
+    UserService userService;
+    
+    @Autowired
     PostService postService;
     
     @Value("${analytics.enabled:true}")
@@ -57,9 +61,9 @@ public class PostFrameController
     @ModelAttribute(name = "analyticsEnabled")
     public Boolean analyticsEnabled()
     {
-        return analyticsEnabled;
-    }
-            
+        return analyticsEnabled
+                && isUserLogged();
+    }            
     
     @ModelAttribute(name = "posts")
     public List<Post> posts()
@@ -95,12 +99,17 @@ public class PostFrameController
         Post post = postRepository.findBySourceUrl(postId);
         model.addAttribute("postTitle", post.getTitle());
         model.addAttribute("publishDate", post.getPublishedOn() ); 
-        String markdownContent = MarkdownUtils.renderMarkdownTextToHtml(
-                post.getText().getContent());
+        String textContent = postService.getTextContentByPost(post);
+        String markdownContent = MarkdownUtils.renderMarkdownTextToHtml(textContent);
         
         model.addAttribute(MARKDOWN_CONTENT, markdownContent);
         model.addAttribute("postId", postId);        
         model.addAttribute("prefix", "../");
         return POSTFRAME_VIEW;
+    }
+
+    private boolean isUserLogged()
+    {
+        return userService.isUserLogged();
     }
 }

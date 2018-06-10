@@ -31,6 +31,7 @@ import xyz.codevomit.bootlog.data.PostRepository;
 import xyz.codevomit.bootlog.data.TextRepository;
 import xyz.codevomit.bootlog.service.BackupService;
 import xyz.codevomit.bootlog.service.PostService;
+import xyz.codevomit.bootlog.service.UserService;
 
 /**
  *
@@ -108,5 +109,11 @@ public class BootlogConfiguration extends WebMvcConfigurerAdapter
     public Java8TimeDialect java8TimeDialect()
     {
         return new Java8TimeDialect();
+    }
+    
+    @Bean
+    public UserService userService()
+    {
+        return new UserService();
     }
 }
